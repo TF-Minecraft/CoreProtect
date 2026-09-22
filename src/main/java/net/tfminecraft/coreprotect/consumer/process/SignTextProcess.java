@@ -10,6 +10,8 @@ import net.tfminecraft.coreprotect.database.logger.SignTextLogger;
 
 class SignTextProcess {
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     static void process(ConsumerWriteBatch preparedStmt, int batchCount, int processId, int id, int forceData, String user, Object object, int action, int color) {
         if (object instanceof Location) {
             Location location = (Location) object;

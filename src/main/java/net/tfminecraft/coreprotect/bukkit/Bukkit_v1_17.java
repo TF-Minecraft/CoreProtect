@@ -232,6 +232,8 @@ public class Bukkit_v1_17 extends BukkitAdapter {
         return (material == Material.GLOW_ITEM_FRAME) ? GlowItemFrame.class : ItemFrame.class;
     }
 
+    // Version-specific adapter: retain the API available on the older servers handled here.
+    @SuppressWarnings("deprecation")
     @Override
     public boolean isGlowing(Sign sign, boolean isFront) {
         if (!isFront) {
@@ -241,6 +243,8 @@ public class Bukkit_v1_17 extends BukkitAdapter {
         return sign.isGlowingText();
     }
 
+    // Version-specific adapter: retain the API available on the older servers handled here.
+    @SuppressWarnings("deprecation")
     @Override
     public void setGlowing(Sign sign, boolean isFront, boolean isGlowing) {
         if (!isFront) {

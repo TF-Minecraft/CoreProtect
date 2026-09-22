@@ -23,6 +23,8 @@ public final class Chat {
         throw new IllegalStateException("Utility class");
     }
 
+    // Keep the existing legacy text representation, formatting, and exact-string comparisons.
+    @SuppressWarnings("deprecation")
     public static String translateColorCodes(String text) {
         if (text == null) {
             return null;
@@ -39,6 +41,8 @@ public final class Chat {
         sendComponent(sender, string, null);
     }
 
+    // Keep the existing legacy text representation, formatting, and exact-string comparisons.
+    @SuppressWarnings("deprecation")
     public static void sendMessage(CommandSender sender, String message) {
         message = translateColorCodes(message);
         if (sender instanceof ConsoleCommandSender) {

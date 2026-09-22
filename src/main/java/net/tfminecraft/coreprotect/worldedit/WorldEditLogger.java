@@ -54,6 +54,8 @@ public class WorldEditLogger extends Queue {
         return null;
     }
 
+    // Retain the legacy WorldEdit logging contract and NBT representation.
+    @SuppressWarnings("deprecation")
     protected static void postProcess(Extent extent, Actor actor, BlockVector3 position, Location location, BlockStateHolder<?> blockStateHolder, BaseBlock baseBlock, Material oldType, com.sk89q.worldedit.world.block.BlockState oldBlockState, ItemStack[] containerContents) {
         BlockData oldBlockData = BukkitAdapter.adapt(oldBlockState);
         BlockData newBlockData = BukkitAdapter.adapt(blockStateHolder.toImmutableState());
@@ -160,6 +162,8 @@ public class WorldEditLogger extends Queue {
         }
     }
 
+    // Retain the legacy WorldEdit logging contract and NBT representation.
+    @SuppressWarnings("deprecation")
     private static String getMobType(BaseBlock fullBlock) {
         String mobType = null;
         try {

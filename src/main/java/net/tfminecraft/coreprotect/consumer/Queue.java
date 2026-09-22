@@ -327,10 +327,14 @@ public class Queue {
         }, blockLocation.getLocation(), ticks);
     }
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     protected static void queueContainerBreak(String user, Location location, Material type, ItemStack[] oldInventory) {
         queueStandardData(new Object[] { null, Process.CONTAINER_BREAK, type, 0, null, 0, 0, null }, new String[] { user, null }, location, false, Consumer.consumerContainers, oldInventory, Consumer.reserveConsumer());
     }
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     protected static synchronized void queueContainerTransaction(String user, Location location, Material type, Object inventory, int chestId) {
         queueStandardData(new Object[] { null, Process.CONTAINER_TRANSACTION, type, 0, null, 0, chestId, null }, new String[] { user, null }, location, false, Consumer.consumerInventories, inventory, Consumer.reserveConsumer());
     }
@@ -402,6 +406,8 @@ public class Queue {
         queueStandardData(new Object[] { null, Process.ENTITY_INSERT, null, 0, null, 0, id, null }, new String[] { null, null }, name, false, Consumer.reserveConsumer());
     }
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     protected static void queueEntityKill(String user, Location location, List<Object> data, EntityType type) {
         queueStandardData(new Object[] { null, Process.ENTITY_KILL, null, 0, null, 0, 0 }, new String[] { user, null }, new Object[] { getBlockLocation(location), type, null }, false, Consumer.consumerObjectList, data, Consumer.reserveConsumer());
     }
@@ -475,6 +481,8 @@ public class Queue {
         queueStandardData(new Object[] { null, Process.BLOCKDATA_INSERT, null, 0, null, 0, id, null }, new String[] { null, null }, data, false, Consumer.reserveConsumer());
     }
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     protected static void queueNaturalBlockBreak(String user, BlockState block, Block relative, Material type, String blockData, int data) {
         List<BlockState> blockStates = new ArrayList<>();
         if (relative != null) {
@@ -484,10 +492,14 @@ public class Queue {
         queueStandardData(new Object[] { null, Process.NATURAL_BLOCK_BREAK, type, data, null, 0, 0, blockData }, new String[] { user, null }, block, false, Consumer.consumerBlockList, blockStates, Consumer.reserveConsumer());
     }
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     protected static void queuePlayerChat(Player player, String message, long timestamp) {
         queueStandardData(new Object[] { null, Process.PLAYER_CHAT, null, 0, null, 0, 0, null }, new String[] { player.getName(), null }, new Object[] { timestamp, player.getLocation().clone() }, false, Consumer.consumerStrings, message, Consumer.reserveConsumer());
     }
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     protected static void queuePlayerCommand(Player player, String message, long timestamp) {
         queueStandardData(new Object[] { null, Process.PLAYER_COMMAND, null, 0, null, 0, 0, null }, new String[] { player.getName(), null }, new Object[] { timestamp, player.getLocation().clone() }, false, Consumer.consumerStrings, message, Consumer.reserveConsumer());
     }
@@ -500,6 +512,8 @@ public class Queue {
         queueStandardData(new Object[] { null, Process.PLAYER_KILL, null, 0, null, 0, 0, null }, new String[] { user, null }, new Object[] { getBlockLocation(location), player }, false, Consumer.reserveConsumer());
     }
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     protected static void queuePlayerLogin(Player player, int time, int configSessions, int configUsernames) {
         String uuid = player.getUniqueId().toString();
         queueStandardData(new Object[] { null, Process.PLAYER_LOGIN, null, configSessions, null, configUsernames, time, null }, new String[] { player.getName(), uuid }, player.getLocation().clone(), false, Consumer.consumerStrings, uuid, Consumer.reserveConsumer());
@@ -589,6 +603,8 @@ public class Queue {
         }
     }
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     private static synchronized void queueRollbackUpdates(String user, Location location, List<Object[]> rows, int table, int action, boolean inventoryRollback) {
         Objects.requireNonNull(rows, "rows");
         if (rows.isEmpty()) {
@@ -640,6 +656,8 @@ public class Queue {
         }
     }
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     protected static void queueSignText(String user, Location location, int action, int color, int colorSecondary, boolean frontGlowing, boolean backGlowing, boolean isWaxed, boolean isFront, String line1, String line2, String line3, String line4, String line5, String line6, String line7, String line8, int offset) {
         /*
         if (line1.length() == 0 && line2.length() == 0 && line3.length() == 0 && line4.length() == 0) {
@@ -658,6 +676,8 @@ public class Queue {
         queueStandardData(new Object[] { null, Process.SKULL_UPDATE, null, 0, null, 0, rowId, null }, new String[] { user, null }, block, false, Consumer.reserveConsumer());
     }
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     protected static void queueStructureGrow(String user, BlockState block, List<BlockState> blockList, int replacedListSize) {
         queueStandardData(new Object[] { null, Process.STRUCTURE_GROWTH, null, 0, null, 0, replacedListSize, null }, new String[] { user, null }, block, false, Consumer.consumerBlockList, blockList, Consumer.reserveConsumer());
     }

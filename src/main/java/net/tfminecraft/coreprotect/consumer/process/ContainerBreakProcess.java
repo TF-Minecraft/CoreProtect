@@ -13,6 +13,8 @@ import net.tfminecraft.coreprotect.utility.HopperTransactionUtils;
 
 class ContainerBreakProcess {
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     static void process(ConsumerWriteBatch preparedStmt, int batchCount, int processId, int id, Material type, String user, Object object) {
         if (object instanceof Location) {
             Location location = (Location) object;

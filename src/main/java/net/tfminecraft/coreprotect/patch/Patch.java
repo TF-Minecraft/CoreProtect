@@ -278,6 +278,8 @@ public class Patch {
                     }
                 }
                 class runPatch implements Runnable {
+                    // Historical database migrations must keep their original server data interpretation.
+                    @SuppressWarnings("deprecation")
                     @Override
                     public void run() {
                         try {

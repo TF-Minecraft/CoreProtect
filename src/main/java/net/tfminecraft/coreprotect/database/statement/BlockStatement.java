@@ -104,6 +104,8 @@ public class BlockStatement {
         return result;
     }
 
+    // Existing database records use this legacy metadata representation; preserve read/write compatibility.
+    @SuppressWarnings("deprecation")
     private static List<Object> deserializeMetadataStrict(byte[] metadata) throws Exception {
         if (BlockMetaCodec.isEncoded(metadata)) {
             return BlockMetaCodec.decode(metadata);

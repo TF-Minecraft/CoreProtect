@@ -271,6 +271,8 @@ public class BukkitAdapter implements BukkitInterface {
         return null;
     }
 
+    // Pre-1.20.2 fallback; newer adapters use the base potion type API.
+    @SuppressWarnings("removal")
     @Override
     public ItemStack getArrowMeta(Arrow arrow, ItemStack itemStack) {
         PotionData data = arrow.getBasePotionData();
@@ -418,6 +420,8 @@ public class BukkitAdapter implements BukkitInterface {
 
     // -------------------- Sign handling methods --------------------
 
+    // Legacy Bukkit sign API for servers without sign sides or Adventure components.
+    @SuppressWarnings("deprecation")
     @Override
     public String getLine(Sign sign, int line) {
         if (line < 4) {
@@ -428,6 +432,8 @@ public class BukkitAdapter implements BukkitInterface {
         }
     }
 
+    // Legacy Bukkit sign API preserves stored text on older servers.
+    @SuppressWarnings("deprecation")
     @Override
     public void setLine(Sign sign, int line, String string) {
         if (string == null) {
@@ -470,6 +476,8 @@ public class BukkitAdapter implements BukkitInterface {
         // Base implementation does nothing
     }
 
+    // Legacy Bukkit sign API for servers without sign sides.
+    @SuppressWarnings("deprecation")
     @Override
     public void setColor(Sign sign, boolean isFront, int color) {
         if (!isFront) {
@@ -484,6 +492,8 @@ public class BukkitAdapter implements BukkitInterface {
         // Base implementation does nothing
     }
 
+    // Legacy Bukkit sign API for servers without sign sides.
+    @SuppressWarnings("deprecation")
     @Override
     public int getColor(Sign sign, boolean isFront) {
         if (isFront) {
@@ -505,6 +515,8 @@ public class BukkitAdapter implements BukkitInterface {
         return null;
     }
 
+    // Legacy enum naming fallback; newer adapters use the art registry.
+    @SuppressWarnings("removal")
     @Override
     public String getPaintingArtKey(Painting painting) {
         try {
@@ -515,6 +527,8 @@ public class BukkitAdapter implements BukkitInterface {
         }
     }
 
+    // Legacy art lookup fallback; newer adapters use the art registry.
+    @SuppressWarnings("deprecation")
     @Override
     public Art getPaintingArt(String name) {
         if (name == null || name.isBlank()) {

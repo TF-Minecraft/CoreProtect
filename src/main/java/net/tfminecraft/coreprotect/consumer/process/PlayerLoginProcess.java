@@ -12,6 +12,8 @@ import net.tfminecraft.coreprotect.model.action.SessionActions;
 
 class PlayerLoginProcess {
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     static void process(ConsumerWriteBatch batch, int batchCount, int processId, int id, Object object, int configSessions, int configUsernames, int time, String user) {
         if (object instanceof Location) {
             Map<Integer, String> strings = Consumer.consumerStrings.get(processId);

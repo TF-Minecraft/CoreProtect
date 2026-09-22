@@ -18,6 +18,8 @@ public class VersionUtils {
         throw new IllegalStateException("Utility class");
     }
 
+    // Plugin description access also supports older Bukkit and third-party Plugin implementations.
+    @SuppressWarnings("deprecation")
     public static String getPluginVersion() {
         String version = CoreProtect.getInstance().getDescription().getVersion();
         if (version.contains("-")) {
@@ -45,6 +47,8 @@ public class VersionUtils {
         return new Integer[] { major, minor, revision };
     }
 
+    // Plugin description access also supports older Bukkit and third-party Plugin implementations.
+    @SuppressWarnings("deprecation")
     public static String getPluginName() {
         CoreProtect instance = CoreProtect.getInstance();
         // Return default name if instance is null
@@ -185,6 +189,8 @@ public class VersionUtils {
         return newVersion(StringUtils.convertArray(oldVersionSplit), StringUtils.convertArray(currentVersionSplit));
     }
 
+    // Plugin description access also supports older Bukkit and third-party Plugin implementations.
+    @SuppressWarnings("deprecation")
     public static void loadWorldEdit() {
         try {
             Plugin worldEdit = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
@@ -262,6 +268,8 @@ public class VersionUtils {
         return validVersion;
     }
 
+    // Plugin description access also supports older Bukkit and third-party Plugin implementations.
+    @SuppressWarnings("deprecation")
     private static boolean isFastAsyncWorldEdit(Plugin plugin) {
         return plugin != null && plugin.getDescription() != null && "FastAsyncWorldEdit".equals(plugin.getDescription().getName());
     }

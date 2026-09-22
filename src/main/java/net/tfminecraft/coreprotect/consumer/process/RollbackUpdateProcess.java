@@ -17,6 +17,8 @@ class RollbackUpdateProcess {
         process(batch, processId, id, action, table, RollbackUpdateTargets.usesInventoryRollbackState(table));
     }
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     static void process(ConsumerWriteBatch batch, int processId, int id, int action, int table, boolean inventoryRollback) throws Exception {
         Map<Integer, List<Object[]>> updateLists = Consumer.consumerObjectArrayList.get(processId);
         if (updateLists.get(id) != null) {

@@ -119,6 +119,8 @@ public class PluginInitializationService {
      * @param plugin
      *            The CoreProtect plugin instance
      */
+    // Plugin description access also supports older Bukkit and third-party Plugin implementations.
+    @SuppressWarnings("deprecation")
     private static void displayStartupMessages(JavaPlugin plugin) {
         PluginDescriptionFile pluginDescription = plugin.getDescription();
         ChatUtils.sendConsoleComponentStartup(Bukkit.getServer().getConsoleSender(), Phrase.build(Phrase.ENABLE_SUCCESS, ConfigHandler.EDITION_NAME));

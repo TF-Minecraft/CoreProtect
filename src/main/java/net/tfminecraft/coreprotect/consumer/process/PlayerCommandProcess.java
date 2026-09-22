@@ -10,6 +10,8 @@ import net.tfminecraft.coreprotect.database.logger.CommandLogger;
 
 class PlayerCommandProcess {
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     static void process(ConsumerWriteBatch preparedStmt, int batchCount, int processId, int id, Object object, String user) {
         if (!(object instanceof Object[])) {
             return;

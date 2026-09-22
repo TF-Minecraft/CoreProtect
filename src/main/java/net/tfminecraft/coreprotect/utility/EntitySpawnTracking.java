@@ -941,6 +941,8 @@ public final class EntitySpawnTracking {
         }
     }
 
+    // Entity rollback data retains legacy names and age/boat fields for existing records.
+    @SuppressWarnings({"deprecation", "removal"})
     public static List<Object> serializeState(Entity entity) {
         List<Object> state = new ArrayList<>();
         state.add(entity.getCustomName());
@@ -982,6 +984,8 @@ public final class EntitySpawnTracking {
         return state;
     }
 
+    // Entity rollback data retains legacy names and age/boat fields for existing records.
+    @SuppressWarnings("deprecation")
     public static List<Object> serializeKillData(Entity entity) {
         List<Object> data = new ArrayList<>();
         data.add(new ArrayList<>());
@@ -1040,6 +1044,8 @@ public final class EntitySpawnTracking {
         return contents;
     }
 
+    // Entity rollback data retains legacy names and age/boat fields for existing records.
+    @SuppressWarnings({"deprecation", "removal"})
     public static void restoreState(Entity entity, List<Object> state) {
         if (state == null || state.isEmpty()) {
             return;

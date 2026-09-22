@@ -95,6 +95,8 @@ public class ItemMetaHandler {
         return itemMeta.getEnchants();
     }
 
+    // Keep the existing legacy text representation, formatting, and exact-string comparisons.
+    @SuppressWarnings("deprecation")
     public static List<String> getEnchantments(ItemStack item, String displayName) {
         List<String> result = new ArrayList<>();
         ItemMeta itemMeta = item.getItemMeta();

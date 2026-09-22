@@ -22,6 +22,8 @@ public class RollbackItemHandler {
      *            The metadata as a byte array
      * @return Object array containing [slot, facing, itemstack]
      */
+    // Existing database records use this legacy metadata representation; preserve read/write compatibility.
+    @SuppressWarnings("deprecation")
     public static Object[] populateItemStack(ItemStack itemstack, byte[] metadata) {
         if (metadata != null) {
             try {

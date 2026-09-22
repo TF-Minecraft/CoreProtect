@@ -22,6 +22,8 @@ public class Language {
         return translatedPhrases.get(phrase);
     }
 
+    // Keep the existing legacy text representation, formatting, and exact-string comparisons.
+    @SuppressWarnings("deprecation")
     protected static void setUserPhrase(Phrase phrase, String value) {
         if (value != null) {
             value = ChatColor.translateAlternateColorCodes('&', value);
@@ -29,6 +31,8 @@ public class Language {
         userPhrases.put(phrase, value);
     }
 
+    // Keep the existing legacy text representation, formatting, and exact-string comparisons.
+    @SuppressWarnings("deprecation")
     protected static void setTranslatedPhrase(Phrase phrase, String value) {
         if (value != null) {
             value = ChatColor.translateAlternateColorCodes('&', value);

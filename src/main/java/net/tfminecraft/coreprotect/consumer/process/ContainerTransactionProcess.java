@@ -41,6 +41,8 @@ class ContainerTransactionProcess {
         return true;
     }
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     static void process(ConsumerWriteBatch preparedStmtContainer, ConsumerWriteBatch preparedStmtItems, int batchCount, int processId, int id, Material type, int forceData, String user, Object object) {
         if (!(object instanceof Location)) {
             return;

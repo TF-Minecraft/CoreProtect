@@ -14,6 +14,8 @@ import net.tfminecraft.coreprotect.listener.block.TNTPrimeUtil;
 
 public final class LegacyTNTPrimeListener extends Queue implements Listener {
 
+    // Compatibility fallback for Paper versions predating Bukkit's TNTPrimeEvent.
+    @SuppressWarnings({ "deprecation", "removal" })
     @EventHandler(priority = EventPriority.MONITOR)
     protected void onTNTPrime(TNTPrimeEvent event) {
         Block block = event.getBlock();

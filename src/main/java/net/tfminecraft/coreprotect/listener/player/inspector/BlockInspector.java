@@ -16,6 +16,8 @@ public class BlockInspector extends BaseInspector {
 
     public void performBlockLookup(final Player player, final BlockState blockState) {
         class BasicThread implements Runnable {
+            // Keep the existing legacy text representation, formatting, and exact-string comparisons.
+            @SuppressWarnings("deprecation")
             @Override
             public void run() {
                 try {

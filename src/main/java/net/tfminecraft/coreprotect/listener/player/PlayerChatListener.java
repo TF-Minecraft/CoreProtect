@@ -11,6 +11,8 @@ import net.tfminecraft.coreprotect.consumer.Queue;
 
 public final class PlayerChatListener extends Queue implements Listener {
 
+    // Bukkit chat fallback remains supported; the Paper chat listener handles Adventure events.
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         String message = event.getMessage();

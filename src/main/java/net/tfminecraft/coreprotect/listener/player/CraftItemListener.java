@@ -66,6 +66,8 @@ public final class CraftItemListener extends Queue implements Listener {
         Queue.queueItemTransaction(user, location.clone(), time, 0, itemId);
     }
 
+    // Audit records store legacy ingredient stacks, rather than recipe-choice alternatives.
+    @SuppressWarnings("deprecation")
     protected static void playerCraftItem(InventoryClickEvent event, boolean isTrade) {
         if (event.getResult() == Result.DENY || event.getSlotType() != SlotType.RESULT) {
             return;

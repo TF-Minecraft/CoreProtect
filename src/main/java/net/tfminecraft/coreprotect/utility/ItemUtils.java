@@ -472,6 +472,8 @@ public class ItemUtils {
         return null;
     }
 
+    // Existing database records use this legacy metadata representation; preserve read/write compatibility.
+    @SuppressWarnings("deprecation")
     private static byte[] serializeByteData(Object data) throws Exception {
         try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream(); BukkitObjectOutputStream objectStream = new BukkitObjectOutputStream(byteStream)) {
             objectStream.writeObject(data);
@@ -687,6 +689,8 @@ public class ItemUtils {
         return item;
     }
 
+    // Keep the existing legacy text representation, formatting, and exact-string comparisons.
+    @SuppressWarnings("deprecation")
     public static String getEnchantments(byte[] metadata, int type, int amount) {
         var item = getItemStack(metadata, type, amount);
         if (item == null) return "";

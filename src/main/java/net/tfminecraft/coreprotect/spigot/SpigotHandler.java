@@ -25,12 +25,18 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class SpigotHandler extends SpigotAdapter implements SpigotInterface {
 
+    // Spigot fallback retains Bungee colors; the Paper adapter uses Adventure.
+    @SuppressWarnings("deprecation")
     public static ChatColor DARK_AQUA = ChatColor.of("#31b0e8");
 
+    // Spigot fallback uses Bungee components; Adventure handling lives in the Paper adapter.
+    @SuppressWarnings("deprecation")
     public SpigotHandler() {
         Color.DARK_AQUA = SpigotHandler.DARK_AQUA.toString();
     }
 
+    // Spigot fallback uses Bungee components; Adventure handling lives in the Paper adapter.
+    @SuppressWarnings("deprecation")
     @Override
     public void addHoverComponent(Object message, String[] data) {
         try {
@@ -86,6 +92,8 @@ public class SpigotHandler extends SpigotAdapter implements SpigotInterface {
         }
     }
 
+    // Spigot fallback uses Bungee components; Adventure handling lives in the Paper adapter.
+    @SuppressWarnings("deprecation")
     @Override
     public void setHoverEvent(Object component, String text) {
         if (Config.getGlobal().HOVER_EVENTS) {
@@ -93,6 +101,8 @@ public class SpigotHandler extends SpigotAdapter implements SpigotInterface {
         }
     }
 
+    // Spigot fallback uses Bungee components; Adventure handling lives in the Paper adapter.
+    @SuppressWarnings("deprecation")
     @Override
     public void sendComponent(CommandSender sender, String string, String bypass) {
         TextComponent message = new TextComponent();
@@ -180,6 +190,8 @@ public class SpigotHandler extends SpigotAdapter implements SpigotInterface {
         }
     }
 
+    // Spigot fallback uses Bungee components; Adventure handling lives in the Paper adapter.
+    @SuppressWarnings("deprecation")
     private static void addBuilder(TextComponent message, StringBuilder builder) {
         String[] splitBuilder = builder.toString().split(SpigotHandler.DARK_AQUA.toString());
         for (int i = 0; i < splitBuilder.length; i++) {
