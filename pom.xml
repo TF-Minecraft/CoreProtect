@@ -203,6 +203,7 @@
     </repositories>
 
     <build>
+        <finalName>coreprotect-${project.version}</finalName>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
