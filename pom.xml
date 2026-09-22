@@ -285,11 +285,11 @@
                             <relocations>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>net.coreprotect</shadedPattern>
+                                    <shadedPattern>net.tfminecraft.coreprotect</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.zaxxer</pattern>
-                                    <shadedPattern>net.coreprotect</shadedPattern>
+                                    <shadedPattern>net.tfminecraft.coreprotect</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

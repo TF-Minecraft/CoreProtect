@@ -153,8 +153,8 @@ CoreProtect-TestAPI
 CoreProtect-Fabric
 CoreProtect-Hytale
 publish/
-/src/main/java/net/coreprotect/utility/extensions
-!/src/main/java/net/coreprotect/utility/extensions/Extensions.java
+/src/main/java/net/tfminecraft/coreprotect/utility/extensions
+!/src/main/java/net/tfminecraft/coreprotect/utility/extensions/Extensions.java
 /.apt_generated/
 /.apt_generated_tests/
 server/*
