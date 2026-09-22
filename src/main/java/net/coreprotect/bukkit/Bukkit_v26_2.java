@@ -14,7 +14,10 @@ public class Bukkit_v26_2 extends Bukkit_v1_21_5 {
     }
 
     private void initializeBlockGroups() {
-        BlockGroup.TRACK_TOP_BOTTOM.add(Material.SULFUR_SPIKE);
+        Material sulfurSpike = Material.matchMaterial("SULFUR_SPIKE");
+        if (sulfurSpike != null) {
+            BlockGroup.TRACK_TOP_BOTTOM.add(sulfurSpike);
+        }
     }
 
 }
