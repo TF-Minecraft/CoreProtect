@@ -1,5 +1,5 @@
 name: CoreProtect
-main: net.coreprotect.CoreProtect
+main: net.tfminecraft.coreprotect.CoreProtect
 version: ${project.version}
 branch: ${project.branch}
 api-version: '1.21.10'
