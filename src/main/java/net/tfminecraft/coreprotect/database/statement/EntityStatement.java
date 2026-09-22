@@ -95,6 +95,8 @@ public class EntityStatement {
         return serializeLegacyData(sanitizeData(data));
     }
 
+    // Existing database records use this legacy metadata representation; preserve read/write compatibility.
+    @SuppressWarnings("deprecation")
     private static byte[] serializeLegacyData(List<Object> data) throws Exception {
         try (ByteArrayOutputStream output = new ByteArrayOutputStream(); BukkitObjectOutputStream objectOutput = new BukkitObjectOutputStream(output)) {
             objectOutput.writeObject(data);
@@ -211,6 +213,8 @@ public class EntityStatement {
         return deserializeData(DatabaseUtils.getBytes(resultSet, column), kind);
     }
 
+    // Existing database records use this legacy metadata representation; preserve read/write compatibility.
+    @SuppressWarnings("deprecation")
     private static List<Object> deserializeDataStrict(byte[] data, Kind kind) throws Exception {
         if (EntityDataCodec.isEncoded(data)) {
             return EntityDataCodec.decode(kind, data);

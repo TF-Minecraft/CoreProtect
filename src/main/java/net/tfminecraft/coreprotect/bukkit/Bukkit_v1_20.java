@@ -213,6 +213,8 @@ public class Bukkit_v1_20 extends Bukkit_v1_19 {
         return Tag.ITEMS_BOOKSHELF_BOOKS.isTagged(material);
     }
 
+    // Capability-checked Bukkit 1.20.1 API retained for older servers.
+    @SuppressWarnings("deprecation")
     @Override
     public ItemStack getChiseledBookshelfBook(BlockState blockState, PlayerInteractEvent event) {
         try {
@@ -237,6 +239,8 @@ public class Bukkit_v1_20 extends Bukkit_v1_19 {
         }
     }
 
+    // Bukkit 1.20 compatibility boundary preserves legacy sign text without Paper components.
+    @SuppressWarnings("deprecation")
     @Override
     public String getLine(Sign sign, int line) {
         if (line < 4) {
@@ -247,6 +251,8 @@ public class Bukkit_v1_20 extends Bukkit_v1_19 {
         }
     }
 
+    // Bukkit 1.20 compatibility boundary restores legacy sign text without Paper components.
+    @SuppressWarnings("deprecation")
     @Override
     public void setLine(Sign sign, int line, String string) {
         string = string == null ? "" : string;

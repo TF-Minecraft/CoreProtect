@@ -32,11 +32,15 @@ public final class WorldEditBlockState implements BlockState {
         blockData = data;
     }
 
+    // BlockState requires these legacy interface methods for the WorldEdit wrapper.
+    @SuppressWarnings("deprecation")
     @Override
     public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {
 
     }
 
+    // BlockState requires these legacy interface methods for the WorldEdit wrapper.
+    @SuppressWarnings("deprecation")
     @Override
     public List<MetadataValue> getMetadata(String metadataKey) {
         return null;
@@ -57,6 +61,8 @@ public final class WorldEditBlockState implements BlockState {
         return null;
     }
 
+    // BlockState requires these legacy interface methods for the WorldEdit wrapper.
+    @SuppressWarnings({"deprecation", "removal"})
     @Override
     public MaterialData getData() {
         return null;
@@ -121,6 +127,8 @@ public final class WorldEditBlockState implements BlockState {
         return null;
     }
 
+    // BlockState requires these legacy interface methods for the WorldEdit wrapper.
+    @SuppressWarnings({"deprecation", "removal"})
     @Override
     public void setData(MaterialData data) {
 
@@ -151,11 +159,15 @@ public final class WorldEditBlockState implements BlockState {
         return false;
     }
 
+    // BlockState requires these legacy interface methods for the WorldEdit wrapper.
+    @SuppressWarnings({"deprecation", "removal"})
     @Override
     public byte getRawData() {
         return 0;
     }
 
+    // BlockState requires these legacy interface methods for the WorldEdit wrapper.
+    @SuppressWarnings({"deprecation", "removal"})
     @Override
     public void setRawData(byte data) {
 

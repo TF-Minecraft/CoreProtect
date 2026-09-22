@@ -42,6 +42,8 @@ public class ShutdownService {
      * @param plugin
      *            The CoreProtect plugin instance
      */
+    // Plugin description access also supports older Bukkit and third-party Plugin implementations.
+    @SuppressWarnings("deprecation")
     public static void safeShutdown(Plugin plugin) {
         try {
             Consumer.blockDatabaseReloadForShutdown();

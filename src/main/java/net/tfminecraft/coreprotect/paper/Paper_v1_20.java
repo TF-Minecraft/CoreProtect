@@ -29,6 +29,8 @@ public class Paper_v1_20 extends Paper_v1_19 {
         }
     }
 
+    // Version-specific adapter: retain the API available on the older servers handled here.
+    @SuppressWarnings("deprecation")
     @Override
     public String getSkullOwner(Skull skull) {
         PlayerProfile playerProfile = skull.getPlayerProfile();
@@ -47,6 +49,8 @@ public class Paper_v1_20 extends Paper_v1_19 {
         return owner;
     }
 
+    // Version-specific adapter: retain the API available on the older servers handled here.
+    @SuppressWarnings("deprecation")
     @Override
     public void setSkullOwner(Skull skull, String owner) {
         if (owner == null || owner.length() == 0) {
@@ -61,6 +65,8 @@ public class Paper_v1_20 extends Paper_v1_19 {
         }
     }
 
+    // Version-specific adapter: retain the API available on the older servers handled here.
+    @SuppressWarnings("deprecation")
     @Override
     public String getSkullSkin(Skull skull) {
         PlayerProfile playerProfile = skull.getPlayerProfile();
@@ -76,6 +82,8 @@ public class Paper_v1_20 extends Paper_v1_19 {
         return skin.toString();
     }
 
+    // Version-specific adapter: retain the API available on the older servers handled here.
+    @SuppressWarnings("deprecation")
     @Override
     public void setSkullSkin(Skull skull, String skin) {
         try {

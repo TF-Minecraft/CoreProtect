@@ -13,6 +13,8 @@ import net.tfminecraft.coreprotect.utility.ErrorReporter;
 
 public class __2_11_0 {
 
+    // Historical database migration must preserve the original numeric Bukkit IDs.
+    @SuppressWarnings({ "deprecation", "removal" })
     protected static boolean patch(Statement statement) {
         try {
             if (Config.getGlobal().MYSQL) {

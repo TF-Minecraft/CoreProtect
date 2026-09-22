@@ -98,6 +98,8 @@ public class EntityUtil {
         return scheduleEntitySpawn(blockLocation, type, list, false);
     }
 
+    // Entity rollback data retains legacy names and age/boat fields for existing records.
+    @SuppressWarnings("deprecation")
     private static CompletableFuture<Entity> scheduleEntitySpawn(final Location blockLocation, final EntityType type, final List<Object> list, final boolean legacyTransition) {
         CompletableFuture<Entity> completion = new CompletableFuture<>();
         if (type == null) {

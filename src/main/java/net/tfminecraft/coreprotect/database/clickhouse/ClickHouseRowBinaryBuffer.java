@@ -162,6 +162,8 @@ final class ClickHouseRowBinaryBuffer implements AutoCloseable {
         }
     }
 
+    // Retain the existing ClickHouse RowBinary wire encoding until a byte-compatible client migration.
+    @SuppressWarnings("deprecation")
     private void writeValue(String declaredType, Object value) throws IOException {
         String type = declaredType;
         if (type.startsWith("Nullable(") && type.endsWith(")")) {

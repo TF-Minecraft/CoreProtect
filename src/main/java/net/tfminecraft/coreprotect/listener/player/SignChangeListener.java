@@ -17,6 +17,8 @@ import net.tfminecraft.coreprotect.paper.PaperAdapter;
 
 public final class SignChangeListener extends Queue implements Listener {
 
+    // Keep the existing legacy text representation, formatting, and exact-string comparisons.
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.MONITOR)
     protected void onSignChange(SignChangeEvent event) {
         Block block = event.getBlock();

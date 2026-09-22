@@ -23,6 +23,8 @@ public class __2_18_0 {
 
     protected static boolean createIndexes = true;
 
+    // Historical database migrations must keep their original server data interpretation.
+    @SuppressWarnings("deprecation")
     protected static boolean patch(Statement statement) {
         try {
 

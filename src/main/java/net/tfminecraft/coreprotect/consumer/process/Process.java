@@ -117,6 +117,8 @@ public class Process {
         }
     }
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     protected static void processConsumer(int processId, boolean lastRun) {
         List<PendingEntitySpawnLog> pendingEntitySpawnLogs = new ArrayList<>();
         Map<UUID, EntitySpawnIdentity> entitySpawnIdentities = new LinkedHashMap<>();
@@ -858,6 +860,8 @@ public class Process {
         }
     }
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     private static void discardProcessedConsumerData(int processId, ArrayList<Object[]> consumerData, Map<Integer, String[]> users, Map<Integer, Object> consumerObject, int count) {
         int processed = Math.min(count, consumerData.size());
         for (int index = 0; index < processed; index++) {

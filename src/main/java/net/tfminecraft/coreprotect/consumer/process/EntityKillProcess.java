@@ -14,6 +14,8 @@ import net.tfminecraft.coreprotect.utility.EntityUtils;
 
 class EntityKillProcess {
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     static void process(ConsumerWriteBatch preparedStmt, ConsumerWriteBatch preparedStmtEntities, ConsumerWriteBatch preparedStmtEntityKillLinks, int batchCount, int processId, int id, Object object, String user) {
         if (object instanceof Object[]) {
             Object[] values = (Object[]) object;

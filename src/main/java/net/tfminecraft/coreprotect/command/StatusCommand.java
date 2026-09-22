@@ -31,6 +31,8 @@ public class StatusCommand {
         }
 
         class BasicThread implements Runnable {
+            // Plugin description access also supports older Bukkit and third-party Plugin implementations.
+            @SuppressWarnings("deprecation")
             @Override
             public void run() {
                 try {

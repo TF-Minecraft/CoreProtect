@@ -136,6 +136,8 @@ public class PaperAdapter implements PaperInterface {
         return false;
     }
 
+    // Version-specific adapter: retain the API available on the older servers handled here.
+    @SuppressWarnings("deprecation")
     @Override
     public String getSkullOwner(Skull skull) {
         OfflinePlayer player = skull.getOwningPlayer();
@@ -146,6 +148,8 @@ public class PaperAdapter implements PaperInterface {
         return player.getUniqueId().toString();
     }
 
+    // Version-specific adapter: retain the API available on the older servers handled here.
+    @SuppressWarnings("deprecation")
     @Override
     public void setSkullOwner(Skull skull, String owner) {
         if (owner != null && owner.length() >= 32 && owner.contains("-")) {

@@ -151,7 +151,7 @@ public class MaterialUtils extends Queue {
             name = net.tfminecraft.coreprotect.bukkit.BukkitAdapter.ADAPTER.parseLegacyName(name);
             material = Material.getMaterial(name);
 
-            if (material == null && Material.getMaterial(Material.LEGACY_PREFIX + name) != null) {
+            if (material == null && Material.getMaterial("LEGACY_" + name) != null) {
                 material = Material.getMaterial(name, true);
             }
         }

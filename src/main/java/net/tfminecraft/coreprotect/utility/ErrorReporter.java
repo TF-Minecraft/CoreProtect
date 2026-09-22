@@ -283,7 +283,7 @@ public final class ErrorReporter {
         HttpURLConnection connection = null;
 
         try {
-            URL url = new URL(REPORT_URL);
+            URL url = java.net.URI.create(REPORT_URL).toURL();
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Accept-Charset", "UTF-8");

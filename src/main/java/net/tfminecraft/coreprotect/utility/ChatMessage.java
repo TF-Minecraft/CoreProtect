@@ -99,6 +99,8 @@ public class ChatMessage {
         return build();
     }
 
+    // Keep the existing legacy text representation, formatting, and exact-string comparisons.
+    @SuppressWarnings("deprecation")
     public static String parseQuotes(String string, String textColor) {
         int indexFirst = string.indexOf("\"");
         int indexLast = string.lastIndexOf("\"");
@@ -110,6 +112,8 @@ public class ChatMessage {
         return string;
     }
 
+    // Keep the existing legacy text representation, formatting, and exact-string comparisons.
+    @SuppressWarnings("deprecation")
     private static String createSpaces(String string, boolean seperatorOffset, boolean createSpaces) {
         String result = "";
         if (!createSpaces) {

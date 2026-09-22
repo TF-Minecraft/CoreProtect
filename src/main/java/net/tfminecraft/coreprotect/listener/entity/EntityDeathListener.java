@@ -129,6 +129,8 @@ public final class EntityDeathListener extends Queue implements Listener {
         }
     }
 
+    // Entity rollback data retains legacy names and age/boat fields for existing records.
+    @SuppressWarnings("deprecation")
     protected static void logEntityDeath(LivingEntity entity, String e) {
         if (!Config.getConfig(entity.getWorld()).ENTITY_KILLS) {
             return;
@@ -625,6 +627,8 @@ public final class EntityDeathListener extends Queue implements Listener {
         return data;
     }
 
+    // Entity rollback data retains legacy names and age/boat fields for existing records.
+    @SuppressWarnings("deprecation")
     private static boolean shouldSuppressEntityKill(String user, LivingEntity entity, DamageCause cause) {
         if (user == null || !user.startsWith("#") || "#command".equals(user)) {
             return false;

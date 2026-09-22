@@ -198,7 +198,7 @@ public class Bukkit_v1_21 extends Bukkit_v1_20 {
      *            The class of the registry
      * @return The registry value
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"deprecation", "rawtypes", "unchecked"})
     @Override
     public Object getRegistryValue(String key, Object tClass) {
         NamespacedKey namespacedKey = NamespacedKey.fromString(key);
@@ -206,6 +206,8 @@ public class Bukkit_v1_21 extends Bukkit_v1_20 {
         return Bukkit.getRegistry((Class) tClass).get(namespacedKey);
     }
 
+    // Version-specific adapter: retain the API available on the older servers handled here.
+    @SuppressWarnings("deprecation")
     @Override
     public String getPaintingArtKey(Painting painting) {
         try {
@@ -220,6 +222,8 @@ public class Bukkit_v1_21 extends Bukkit_v1_20 {
         return normalizePaintingArtKey(super.getPaintingArtKey(painting));
     }
 
+    // Version-specific adapter: retain the API available on the older servers handled here.
+    @SuppressWarnings("deprecation")
     @Override
     public Art getPaintingArt(String name) {
         NamespacedKey key = NamespacedKey.fromString(normalizePaintingArtLookupKey(name));

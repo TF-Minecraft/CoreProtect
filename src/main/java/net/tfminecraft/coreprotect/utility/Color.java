@@ -1,6 +1,5 @@
 package net.tfminecraft.coreprotect.utility;
 
-import org.bukkit.ChatColor;
 
 public final class Color {
 
@@ -10,112 +9,112 @@ public final class Color {
     /**
      * Represents black.
      */
-    public static final String BLACK = ChatColor.BLACK.toString();
+    public static final String BLACK = "\u00a70";
 
     /**
      * Represents dark blue.
      */
-    public static final String DARK_BLUE = ChatColor.DARK_BLUE.toString();
+    public static final String DARK_BLUE = "\u00a71";
 
     /**
      * Represents dark green.
      */
-    public static final String DARK_GREEN = ChatColor.DARK_GREEN.toString();
+    public static final String DARK_GREEN = "\u00a72";
 
     /**
      * Represents dark blue (aqua).
      */
-    public static String DARK_AQUA = ChatColor.DARK_AQUA.toString();
+    public static String DARK_AQUA = "\u00a73";
 
     /**
      * Represents dark red.
      */
-    public static final String DARK_RED = ChatColor.DARK_RED.toString();
+    public static final String DARK_RED = "\u00a74";
 
     /**
      * Represents dark purple.
      */
-    public static final String DARK_PURPLE = ChatColor.DARK_PURPLE.toString();
+    public static final String DARK_PURPLE = "\u00a75";
 
     /**
      * Represents gold.
      */
-    public static final String GOLD = ChatColor.GOLD.toString();
+    public static final String GOLD = "\u00a76";
 
     /**
      * Represents grey.
      */
-    public static final String GREY = ChatColor.GRAY.toString();
+    public static final String GREY = "\u00a77";
 
     /**
      * Represents dark grey.
      */
-    public static final String DARK_GREY = ChatColor.DARK_GRAY.toString();
+    public static final String DARK_GREY = "\u00a78";
 
     /**
      * Represents blue.
      */
-    public static final String BLUE = ChatColor.BLUE.toString();
+    public static final String BLUE = "\u00a79";
 
     /**
      * Represents green.
      */
-    public static final String GREEN = ChatColor.GREEN.toString();
+    public static final String GREEN = "\u00a7a";
 
     /**
      * Represents aqua.
      */
-    public static final String AQUA = ChatColor.AQUA.toString();
+    public static final String AQUA = "\u00a7b";
 
     /**
      * Represents red.
      */
-    public static final String RED = ChatColor.RED.toString();
+    public static final String RED = "\u00a7c";
 
     /**
      * Represents light purple.
      */
-    public static final String LIGHT_PURPLE = ChatColor.LIGHT_PURPLE.toString();
+    public static final String LIGHT_PURPLE = "\u00a7d";
 
     /**
      * Represents yellow.
      */
-    public static final String YELLOW = ChatColor.YELLOW.toString();
+    public static final String YELLOW = "\u00a7e";
 
     /**
      * Represents white.
      */
-    public static final String WHITE = ChatColor.WHITE.toString();
+    public static final String WHITE = "\u00a7f";
 
     /**
      * Represents magical characters that change around randomly.
      */
-    public static final String MAGIC = ChatColor.COLOR_CHAR + "k";
+    public static final String MAGIC = "\u00a7k";
 
     /**
      * Makes the text bold.
      */
-    public static final String BOLD = ChatColor.COLOR_CHAR + "l";
+    public static final String BOLD = "\u00a7l";
 
     /**
      * Makes a line appear through the text.
      */
-    public static final String STRIKETHROUGH = ChatColor.COLOR_CHAR + "m";
+    public static final String STRIKETHROUGH = "\u00a7m";
 
     /**
      * Makes the text appear underlined.
      */
-    public static final String UNDERLINE = ChatColor.COLOR_CHAR + "n";
+    public static final String UNDERLINE = "\u00a7n";
 
     /**
      * Makes the text italic.
      */
-    public static final String ITALIC = ChatColor.COLOR_CHAR + "o";
+    public static final String ITALIC = "\u00a7o";
 
     /**
      * Resets all previous chat colors or formats.
      */
-    public static final String RESET = ChatColor.COLOR_CHAR + "r";
+    public static final String RESET = "\u00a7r";
 
     private Color() {
         throw new IllegalStateException("Utility class");

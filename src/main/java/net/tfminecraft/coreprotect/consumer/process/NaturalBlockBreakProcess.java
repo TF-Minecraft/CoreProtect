@@ -15,6 +15,8 @@ import net.tfminecraft.coreprotect.utility.MaterialUtils;
 
 class NaturalBlockBreakProcess {
 
+    // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
+    @SuppressWarnings("deprecation")
     static void process(Statement statement, ConsumerWriteBatch preparedStmt, int batchCount, int processId, int id, String user, Object object, Material blockType, int blockData, String overrideData) {
         if (object instanceof BlockState) {
             BlockState block = (BlockState) object;

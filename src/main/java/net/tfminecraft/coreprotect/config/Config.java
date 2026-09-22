@@ -447,6 +447,8 @@ public class Config extends Language {
     }
 
     // this should only be called on the main thread
+    // Preserve fatal ThreadDeath propagation while reporting ordinary configuration errors.
+    @SuppressWarnings({"deprecation", "removal"})
     private static void parseConfig(final Map<String, byte[]> data) {
         if (!Bukkit.isPrimaryThread()) {
             // we call reloads asynchronously

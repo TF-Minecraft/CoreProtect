@@ -44,6 +44,8 @@ import net.tfminecraft.coreprotect.utility.ErrorReporter;
 
 public class RollbackUtil extends Lookup {
 
+    // Existing database records use this legacy metadata representation; preserve read/write compatibility.
+    @SuppressWarnings("deprecation")
     protected static int modifyContainerItems(Material type, Object container, int slot, ItemStack itemstack, int action) {
         int modifiedArmor = -1;
         try {
@@ -286,7 +288,7 @@ public class RollbackUtil extends Lookup {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"deprecation", "unchecked"})
     public static Object[] populateItemStack(ItemStack itemstack, Object list) {
         int slot = 0;
         String faceData = "";
@@ -486,6 +488,8 @@ public class RollbackUtil extends Lookup {
         return new Object[] { slot, faceData, itemstack };
     }
 
+    // Existing database records use this legacy metadata representation; preserve read/write compatibility.
+    @SuppressWarnings("deprecation")
     public static Object[] populateItemStack(ItemStack itemstack, byte[] metadata) {
         if (metadata != null) {
             try {

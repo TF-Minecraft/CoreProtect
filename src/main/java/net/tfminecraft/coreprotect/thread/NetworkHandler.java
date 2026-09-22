@@ -70,7 +70,7 @@ public class NetworkHandler extends Language implements Runnable {
                 boolean keyValidated = true;
                 String keyConfig = Config.getGlobal().DONATION_KEY.trim();
                 if (keyConfig.length() > 0) {
-                    URL url = new URL("http://coreprotect.net/license/" + keyConfig);
+                    URL url = java.net.URI.create("http://coreprotect.net/license/" + keyConfig).toURL();
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     connection.setRequestProperty("Accept-Charset", "UTF-8");
@@ -197,7 +197,7 @@ public class NetworkHandler extends Language implements Runnable {
                             int postDataLength = postData.length;
 
                             try {
-                                URL url = new URL("http://coreprotect.net/translate/");
+                                URL url = java.net.URI.create("http://coreprotect.net/translate/").toURL();
                                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                                 connection.setRequestMethod("POST");
                                 connection.setRequestProperty("Accept-Charset", "UTF-8");
@@ -295,7 +295,7 @@ public class NetworkHandler extends Language implements Runnable {
 
                 try {
                     // CoreProtect Community Edition
-                    URL url = new URL("http://update.coreprotect.net/version/");
+                    URL url = java.net.URI.create("http://update.coreprotect.net/version/").toURL();
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     connection.setRequestProperty("Accept-Charset", "UTF-8");
@@ -307,7 +307,7 @@ public class NetworkHandler extends Language implements Runnable {
                     status = connection.getResponseCode();
 
                     // CoreProtect Edge
-                    url = new URL("http://update.coreprotect.net/version-edge/");
+                    url = java.net.URI.create("http://update.coreprotect.net/version-edge/").toURL();
                     connectionEdge = (HttpURLConnection) url.openConnection();
                     connectionEdge.setRequestMethod("GET");
                     connectionEdge.setRequestProperty("Accept-Charset", "UTF-8");
@@ -383,7 +383,7 @@ public class NetworkHandler extends Language implements Runnable {
                     /* Stat gathering */
                     int port = Bukkit.getServer().getPort();
                     String stats = port + ":" + (donationKey != null ? donationKey : "") + ":" + version + ConfigHandler.EDITION_BRANCH;
-                    URL url = new URL("http://stats.coreprotect.net/u/?data=" + stats);
+                    URL url = java.net.URI.create("http://stats.coreprotect.net/u/?data=" + stats).toURL();
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     connection.setRequestProperty("Accept-Charset", "UTF-8");
