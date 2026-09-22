@@ -6,7 +6,7 @@
   <properties>
     <project.branch>development</project.branch>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <skipTests>true</skipTests>
+    <skipTests>false</skipTests>
     <maven.compiler.release>11</maven.compiler.release>
     <clickhouse.version>0.9.8</clickhouse.version>
     <duckdb.version>1.4.5.0</duckdb.version>
