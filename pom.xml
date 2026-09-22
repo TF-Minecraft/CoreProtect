@@ -6,7 +6,7 @@
 
     <groupId>net.coreprotect</groupId>
     <artifactId>CoreProtect</artifactId>
-    <version>25.0.0</version>
+    <version>main-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
