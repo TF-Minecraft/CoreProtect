@@ -13,7 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <clickhouse.version>0.9.8</clickhouse.version>
         <duckdb.version>1.4.5.0</duckdb.version>
-        <project.branch>development</project.branch>
+        <project.branch></project.branch>
         <skipTests>false</skipTests>
     </properties>
 
