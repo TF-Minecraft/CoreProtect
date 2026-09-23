@@ -100,3 +100,6 @@ Desktop.ini
 /server/
 /src/main/java/net/tfminecraft/coreprotect/utility/extensions/*
 !/src/main/java/net/tfminecraft/coreprotect/utility/extensions/Extensions.java
+
+# Technical documentation is maintained in TF-Minecraft/Docs
+/docs/
