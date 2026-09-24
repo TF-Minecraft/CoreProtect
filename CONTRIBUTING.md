@@ -1,7 +1,8 @@
 # Contributing
 
+This is the TFMC fork of [PlayPro/CoreProtect](https://github.com/PlayPro/CoreProtect).
 When contributing to this repository, please first discuss the change you wish to make via issue,
-on Discord, or any other method with the owners of this repository before making a change. 
+on the [TFMC Discord](https://discord.gg/tfmc), or any other method with the owners of this repository before making a change.
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
@@ -11,9 +12,9 @@ Please note we have a code of conduct, please follow it in all your interactions
 - Use descriptiveCamelCase for variable/method names. Names containing underscore or abbreviations should be changed.
 - Restrict changes in a commit to a single event or section of code (e.g. refactor BlockBreakEvent and BlockPlaceEvent in separate commits)
 - Attempt to keep the amount of code modified in a single pull request small and readable. 
-- Please utilize [SonarLint](https://www.sonarlint.org) in your IDE. Contributions are automatically analyzed.
+- Please utilize [SonarLint](https://www.sonarlint.org) in your IDE.
 - When adding new functionality, please also be sure to update the documentation as well.
-- Use common sense. If you have a suggestion for a contribution guideline, post it on Discord.
+- Use common sense. If you have a suggestion for a contribution guideline, open an issue.
 
 Please note that although numerous improvements have been made to the codebase over the past few years, there’s still significant work to be done. Parts of this plugin are over a decade old, and new functionality is continuously being added. Refactoring is welcomed, but please be sure to keep commits a reasonable size.
 
@@ -78,8 +79,8 @@ representative at an online or offline event.
 ### Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement on our Discord server, at
-[discord.gg/b4DZ4jy](https://discord.gg/b4DZ4jy).
+reported to the community leaders responsible for enforcement on the TFMC Discord server, at
+[discord.gg/tfmc](https://discord.gg/tfmc).
 All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the
