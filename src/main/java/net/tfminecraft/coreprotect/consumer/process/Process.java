@@ -69,6 +69,7 @@ public class Process {
     public static final int ENTITY_CONTAINER_ROLLBACK_UPDATE = 33;
     public static final int ENTITY_CONTAINER_TRANSITION_UPDATE = 34;
     public static final int ENTITY_INTERACTION = 35;
+    public static final int LOCK_CHANGE = 36;
 
     public static int lastLockUpdate = 0;
     private static volatile int currentConsumerSize = 0;
@@ -293,6 +294,9 @@ public class Process {
                                     break;
                                 case Process.PLAYER_INTERACTION:
                                     PlayerInteractionProcess.process(writeBatch, i, user, object, blockType);
+                                    break;
+                                case Process.LOCK_CHANGE:
+                                    LockChangeProcess.process(writeBatch, i, user, object, blockType);
                                     break;
                                 case Process.CONTAINER_TRANSACTION:
                                     ContainerTransactionProcess.process(writeBatch, writeBatch, i, processId, id, blockType, forceData, user, object);

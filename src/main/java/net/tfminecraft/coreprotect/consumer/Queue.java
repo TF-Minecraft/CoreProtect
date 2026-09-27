@@ -29,6 +29,7 @@ import net.tfminecraft.coreprotect.config.ConfigHandler;
 import net.tfminecraft.coreprotect.consumer.process.Process;
 import net.tfminecraft.coreprotect.listener.block.BlockUtil;
 import net.tfminecraft.coreprotect.model.BlockGroup;
+import net.tfminecraft.coreprotect.model.action.LockChange;
 import net.tfminecraft.coreprotect.model.entity.EntityContainerRollbackUpdate;
 import net.tfminecraft.coreprotect.model.entity.EntityContainerTransaction;
 import net.tfminecraft.coreprotect.model.entity.EntityInteraction;
@@ -506,6 +507,10 @@ public class Queue {
 
     protected static void queuePlayerInteraction(String user, BlockState block, Material type) {
         queueStandardData(new Object[] { null, Process.PLAYER_INTERACTION, type, 0, null, 0, 0, null }, new String[] { user, null }, block, false, Consumer.reserveConsumer());
+    }
+
+    protected static boolean queueLockChange(String user, BlockState block, Material type, LockChange lockChange) {
+        return queueStandardData(new Object[] { null, Process.LOCK_CHANGE, type, 0, null, 0, 0, null }, new String[] { user, null }, new Object[] { block, lockChange }, false, Consumer.reserveConsumer());
     }
 
     protected static void queuePlayerKill(String user, Location location, String player) {
