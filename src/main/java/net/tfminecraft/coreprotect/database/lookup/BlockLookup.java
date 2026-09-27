@@ -6,6 +6,7 @@ import net.tfminecraft.coreprotect.database.statement.UserStatement;
 import net.tfminecraft.coreprotect.language.Phrase;
 import net.tfminecraft.coreprotect.language.Selector;
 import net.tfminecraft.coreprotect.listener.channel.PluginChannelListener;
+import net.tfminecraft.coreprotect.model.action.LockChange;
 import net.tfminecraft.coreprotect.model.action.LookupActions;
 import net.tfminecraft.coreprotect.utility.*;
 import net.tfminecraft.coreprotect.utility.ErrorReporter;
@@ -58,7 +59,8 @@ public class BlockLookup {
             }
 
             String blockName = block.getType().name().toLowerCase(Locale.ROOT);
-            String actionPredicate = "(action IN(0,1," + LookupActions.ENTITY_SPAWN + ") OR (action=" + LookupActions.ENTITY_KILL + " AND type IN(" + placedEntityTypeIds() + ")))";
+            // Plain clicks have no metadata; interaction rows with metadata are lock changes, which belong in block history.
+            String actionPredicate = "(action IN(0,1," + LookupActions.ENTITY_SPAWN + ") OR (action=" + LookupActions.ENTITY_KILL + " AND type IN(" + placedEntityTypeIds() + ")) OR (action=" + LookupActions.INTERACTION + " AND meta IS NOT NULL))";
 
             String where = "wid = " + worldId + " AND x = " + x + " AND z = " + z + " AND y = " + y + " AND " + actionPredicate + " AND time >= " + checkTime;
             boolean combinedDuckDBPage = ConfigHandler.databaseType.isDuckDB();
@@ -66,7 +68,7 @@ public class BlockLookup {
             ResultSet results;
             if (combinedDuckDBPage) {
                 String sourceTable = DuckDBLookupQuery.spatialTable(statement.getConnection(), "block", worldId, x, x, z, z, "spatial_rows");
-                String columns = "data_rows.time,data_rows." + ConfigHandler.databaseType.getUserColumn() + ",data_rows.action,data_rows.type,data_rows.data,data_rows.rolled_back";
+                String columns = "data_rows.time,data_rows." + ConfigHandler.databaseType.getUserColumn() + ",data_rows.action,data_rows.type,data_rows.data,data_rows.meta,data_rows.rolled_back";
                 query = DuckDBLookupQuery.pageQuery(sourceTable, ConfigHandler.prefix + "block", where, columns, false, limit, page_start);
                 results = statement.executeQuery(query);
             }
@@ -77,7 +79,7 @@ public class BlockLookup {
                     count = results.getInt("count");
                 }
                 results.close();
-                query = "SELECT time," + ConfigHandler.databaseType.getUserColumn() + ",action,type,data,rolled_back FROM " + ConfigHandler.prefix + "block " + WorldUtils.getWidIndex("block") + "WHERE " + where + " ORDER BY " + ConfigHandler.getDescendingEventOrder() + " LIMIT " + limit + " OFFSET " + page_start;
+                query = "SELECT time," + ConfigHandler.databaseType.getUserColumn() + ",action,type,data,meta,rolled_back FROM " + ConfigHandler.prefix + "block " + WorldUtils.getWidIndex("block") + "WHERE " + where + " ORDER BY " + ConfigHandler.getDescendingEventOrder() + " LIMIT " + limit + " OFFSET " + page_start;
                 results = statement.executeQuery(query);
             }
 
@@ -96,6 +98,7 @@ public class BlockLookup {
                 int resultData = results.getInt("data");
                 long resultTime = results.getLong("time");
                 int resultRolledBack = results.getInt("rolled_back");
+                LockChange lockChange = resultAction == LookupActions.INTERACTION ? LockChange.fromMetadata(DatabaseUtils.getBytes(results, "meta")) : null;
 
                 String resultUser = UserStatement.getName(statement.getConnection(), resultUserId);
                 String timeAgo = ChatUtils.getTimeSince(resultTime, time, true);
@@ -153,7 +156,14 @@ public class BlockLookup {
                     target = target.split(":")[1];
                 }
 
-                resultTextBuilder.append(timeAgo + " " + tag + " ").append(Phrase.build(phrase, Color.DARK_AQUA + rbFormat + resultUser + Color.WHITE + rbFormat, Color.DARK_AQUA + rbFormat + target + Color.WHITE, selector)).append("\n");
+                String message;
+                if (lockChange != null) {
+                    message = Phrase.build(lockChange.isStaffOverride() ? Phrase.LOOKUP_LOCK_CHANGE_STAFF : Phrase.LOOKUP_LOCK_CHANGE, Color.DARK_AQUA + rbFormat + resultUser + Color.WHITE + rbFormat, Color.DARK_AQUA + rbFormat + target + Color.WHITE + rbFormat, Color.DARK_AQUA + rbFormat + lockChange.getLockState() + Color.WHITE);
+                }
+                else {
+                    message = Phrase.build(phrase, Color.DARK_AQUA + rbFormat + resultUser + Color.WHITE + rbFormat, Color.DARK_AQUA + rbFormat + target + Color.WHITE, selector);
+                }
+                resultTextBuilder.append(timeAgo + " " + tag + " ").append(message).append("\n");
                 PluginChannelListener.getInstance().sendData(commandSender, resultTime, phrase, selector, resultUser, target, -1, x, y, z, worldId, rbFormat, false, tag.contains("+"));
             }
 

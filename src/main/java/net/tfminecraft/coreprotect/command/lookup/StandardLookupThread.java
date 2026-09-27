@@ -35,6 +35,7 @@ import net.tfminecraft.coreprotect.language.Selector;
 import net.tfminecraft.coreprotect.listener.channel.PluginChannelHandshakeListener;
 import net.tfminecraft.coreprotect.listener.channel.PluginChannelListener;
 import net.tfminecraft.coreprotect.model.action.EntityActionFilter;
+import net.tfminecraft.coreprotect.model.action.LockChange;
 import net.tfminecraft.coreprotect.model.action.LookupActions;
 import net.tfminecraft.coreprotect.model.action.SessionActions;
 import net.tfminecraft.coreprotect.model.entity.EntitySpawnRecord;
@@ -562,6 +563,7 @@ public class StandardLookupThread implements Runnable {
                                 Phrase phrase = Phrase.LOOKUP_BLOCK;
                                 String selector = Selector.FIRST;
                                 String action = "a:block";
+                                LockChange lockChange = null;
                                 if (actions.contains(LookupActions.CONTAINER) || actions.contains(5) || actions.contains(LookupActions.ITEM) || amount > -1) {
                                     byte[] metadata = data[11] == null ? null : data[11].getBytes(StandardCharsets.ISO_8859_1);
                                     String tooltip = ItemUtils.getEnchantments(metadata, dtype, amount);
@@ -615,6 +617,7 @@ public class StandardLookupThread implements Runnable {
                                             action = "a:block";
                                         }
                                         else {
+                                            lockChange = daction == LookupActions.INTERACTION ? LockChange.fromLookupString(data[11]) : null;
                                             phrase = Phrase.LOOKUP_INTERACTION; // {clicked|killed}
                                             selector = (daction != LookupActions.ENTITY_KILL ? Selector.FIRST : Selector.SECOND);
                                             tag = (daction != LookupActions.ENTITY_KILL ? Color.WHITE + "-" : Color.RED + "-");
@@ -627,7 +630,14 @@ public class StandardLookupThread implements Runnable {
                                         tag = (daction != LookupActions.BLOCK_BREAK ? Color.GREEN + "+" : Color.RED + "-");
                                     }
 
-                                    Chat.sendComponent(player, timeago + " " + tag + " " + Phrase.build(phrase, Color.DARK_AQUA + rbd + dplayer + Color.WHITE + rbd, Color.DARK_AQUA + rbd + dname + Color.WHITE, selector));
+                                    String message;
+                                    if (lockChange != null) {
+                                        message = Phrase.build(lockChange.isStaffOverride() ? Phrase.LOOKUP_LOCK_CHANGE_STAFF : Phrase.LOOKUP_LOCK_CHANGE, Color.DARK_AQUA + rbd + dplayer + Color.WHITE + rbd, Color.DARK_AQUA + rbd + dname + Color.WHITE + rbd, Color.DARK_AQUA + rbd + lockChange.getLockState() + Color.WHITE);
+                                    }
+                                    else {
+                                        message = Phrase.build(phrase, Color.DARK_AQUA + rbd + dplayer + Color.WHITE + rbd, Color.DARK_AQUA + rbd + dname + Color.WHITE, selector);
+                                    }
+                                    Chat.sendComponent(player, timeago + " " + tag + " " + message);
                                     PluginChannelListener.getInstance().sendData(player, Integer.parseInt(time), phrase, selector, dplayer, dname, (tag.contains("+") ? 1 : -1), dataX, dataY, dataZ, wid, rbd, false, tag.contains("+"));
                                 }
 

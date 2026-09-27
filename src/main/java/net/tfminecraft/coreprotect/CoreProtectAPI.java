@@ -44,6 +44,7 @@ import net.tfminecraft.coreprotect.database.Lookup;
 import net.tfminecraft.coreprotect.database.rollback.Rollback;
 import net.tfminecraft.coreprotect.language.Phrase;
 import net.tfminecraft.coreprotect.listener.player.InventoryChangeListener;
+import net.tfminecraft.coreprotect.model.action.LockChange;
 import net.tfminecraft.coreprotect.model.action.LookupActions;
 import net.tfminecraft.coreprotect.utility.Chat;
 import net.tfminecraft.coreprotect.utility.MaterialUtils;
@@ -60,7 +61,7 @@ public class CoreProtectAPI extends Queue {
     /**
      * Current version of the API
      */
-    private static final int API_VERSION = 13;
+    private static final int API_VERSION = 14;
     private static final AtomicLong API_ROLLBACK_SEQUENCE = new AtomicLong();
 
     public static class ParseResult extends net.tfminecraft.coreprotect.api.result.ParseResult {
@@ -505,6 +506,29 @@ public class CoreProtectAPI extends Queue {
         }
 
         Queue.queuePlayerInteraction(user, location.getBlock().getState(), location.getBlock().getType());
+        return true;
+    }
+
+    /**
+     * Logs a lock state change by a user at a location. Lookups show it as
+     * "user set block lock to state", and it is never rolled back.
+     *
+     * @param user
+     *            The username
+     * @param location
+     *            The location of the locked block
+     * @param lockState
+     *            The new lock state, as it should be shown to staff (for example "Private")
+     * @param staffOverride
+     *            True if staff changed a lock owned by another player
+     * @return True if the change was queued for logging
+     */
+    public boolean logLockChange(String user, Location location, String lockState, boolean staffOverride) {
+        if (!isEnabled() || !isValidUserAndLocation(user, location) || lockState == null || lockState.isEmpty()) {
+            return false;
+        }
+
+        Queue.queueLockChange(user, location.getBlock().getState(), location.getBlock().getType(), new LockChange(lockState, staffOverride));
         return true;
     }
 

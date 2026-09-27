@@ -165,6 +165,8 @@ public class Language {
         phrases.put(Phrase.LOOKUP_CONTAINER, "{0} {added|removed} {1} {2}.");
         phrases.put(Phrase.LOOKUP_HEADER, "{0} Lookup Results");
         phrases.put(Phrase.LOOKUP_INTERACTION, "{0} {clicked|killed} {1}.");
+        phrases.put(Phrase.LOOKUP_LOCK_CHANGE, "{0} set {1} lock to {2}.");
+        phrases.put(Phrase.LOOKUP_LOCK_CHANGE_STAFF, "{0} set {1} lock to {2} (staff override).");
         phrases.put(Phrase.LOOKUP_ENTITY_INTERACTION, "{0} {clicked|sheared|leashed|unleashed} {1}.");
         phrases.put(Phrase.LOOKUP_ENTITY_INTERACTION_ORIGIN, "Origin location");
         phrases.put(Phrase.LOOKUP_ENTITY_ORIGIN, "Spawn location");

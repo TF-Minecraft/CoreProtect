@@ -1,5 +1,7 @@
 package net.tfminecraft.coreprotect.database.logger;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Location;
@@ -13,6 +15,7 @@ import net.tfminecraft.coreprotect.database.ConsumerWriteBatch;
 import net.tfminecraft.coreprotect.database.statement.BlockStatement;
 import net.tfminecraft.coreprotect.database.statement.UserStatement;
 import net.tfminecraft.coreprotect.event.CoreProtectPreLogEvent;
+import net.tfminecraft.coreprotect.model.action.LockChange;
 import net.tfminecraft.coreprotect.model.action.LookupActions;
 import net.tfminecraft.coreprotect.utility.BlockTypeUtils;
 import net.tfminecraft.coreprotect.utility.MaterialUtils;
@@ -25,6 +28,10 @@ public class PlayerInteractLogger {
     }
 
     public static void log(ConsumerWriteBatch preparedStmt, int batchCount, String user, BlockState block, Material blockType) {
+        log(preparedStmt, batchCount, user, block, blockType, null);
+    }
+
+    public static void log(ConsumerWriteBatch preparedStmt, int batchCount, String user, BlockState block, Material blockType, LockChange lockChange) {
         try {
             String blockData = block.getBlockData().getAsString();
             String blockKey = BlockTypeUtils.getBlockDataKey(blockData);
@@ -64,7 +71,8 @@ public class PlayerInteractLogger {
             int y = eventLocation.getBlockY();
             int z = eventLocation.getBlockZ();
             int data = 0;
-            BlockStatement.insert(preparedStmt, batchCount, time, userId, wid, x, y, z, type, data, null, blockData, LookupActions.INTERACTION, 0);
+            List<Object> meta = lockChange == null ? null : lockChange.toMetadata();
+            BlockStatement.insert(preparedStmt, batchCount, time, userId, wid, x, y, z, type, data, meta, blockData, LookupActions.INTERACTION, 0);
         }
         catch (Exception e) {
             Database.handleWriteFailure(e);
