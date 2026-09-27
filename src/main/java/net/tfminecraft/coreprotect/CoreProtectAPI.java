@@ -528,8 +528,7 @@ public class CoreProtectAPI extends Queue {
             return false;
         }
 
-        Queue.queueLockChange(user, location.getBlock().getState(), location.getBlock().getType(), new LockChange(lockState, staffOverride));
-        return true;
+        return Queue.queueLockChange(user, location.getBlock().getState(), location.getBlock().getType(), new LockChange(lockState, staffOverride));
     }
 
     /**

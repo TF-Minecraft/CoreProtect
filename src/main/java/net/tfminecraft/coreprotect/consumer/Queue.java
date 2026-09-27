@@ -509,8 +509,8 @@ public class Queue {
         queueStandardData(new Object[] { null, Process.PLAYER_INTERACTION, type, 0, null, 0, 0, null }, new String[] { user, null }, block, false, Consumer.reserveConsumer());
     }
 
-    protected static void queueLockChange(String user, BlockState block, Material type, LockChange lockChange) {
-        queueStandardData(new Object[] { null, Process.LOCK_CHANGE, type, 0, null, 0, 0, null }, new String[] { user, null }, new Object[] { block, lockChange }, false, Consumer.reserveConsumer());
+    protected static boolean queueLockChange(String user, BlockState block, Material type, LockChange lockChange) {
+        return queueStandardData(new Object[] { null, Process.LOCK_CHANGE, type, 0, null, 0, 0, null }, new String[] { user, null }, new Object[] { block, lockChange }, false, Consumer.reserveConsumer());
     }
 
     protected static void queuePlayerKill(String user, Location location, String player) {
