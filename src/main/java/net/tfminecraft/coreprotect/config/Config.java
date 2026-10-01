@@ -100,6 +100,7 @@ public class Config extends Language {
     public boolean PLAYER_INTERACTIONS;
     public boolean PLAYER_MESSAGES;
     public boolean PLAYER_COMMANDS;
+    public boolean PLAYER_SKILLS;
     public boolean PLAYER_SESSIONS;
     public boolean UNKNOWN_LOGGING;
     public boolean USERNAME_CHANGES;
@@ -172,6 +173,7 @@ public class Config extends Language {
         DEFAULT_VALUES.put("player-interactions", "true");
         DEFAULT_VALUES.put("player-messages", "true");
         DEFAULT_VALUES.put("player-commands", "true");
+        DEFAULT_VALUES.put("player-skills", "true");
         DEFAULT_VALUES.put("player-sessions", "true");
         DEFAULT_VALUES.put("player-pings", "60");
         DEFAULT_VALUES.put("username-changes", "true");
@@ -223,6 +225,7 @@ public class Config extends Language {
         HEADERS.put("player-interactions", new String[] { "# Track player interactions, such as when a player opens a door, presses", "# a button, or opens a chest. Player interactions can't be rolled back." });
         HEADERS.put("player-messages", new String[] { "# Logs messages that players send in the chat." });
         HEADERS.put("player-commands", new String[] { "# Logs all commands used by players." });
+        HEADERS.put("player-skills", new String[] { "# Logs MythicLib skills that players activate, and where skills teleport them.", "# Search them with \"/co lookup a:skill\"." });
         HEADERS.put("player-sessions", new String[] { "# Logs the logins and logouts of players." });
         HEADERS.put("player-pings", new String[] { "# Logs the position of each online player at this interval, in seconds.", "# Search them with \"/co lookup a:ping\". Set to \"0\" to disable." });
         HEADERS.put("username-changes", new String[] { "# Logs when a player changes their Minecraft username." });
@@ -303,6 +306,7 @@ public class Config extends Language {
         this.PLAYER_INTERACTIONS = this.getBoolean("player-interactions");
         this.PLAYER_MESSAGES = this.getBoolean("player-messages");
         this.PLAYER_COMMANDS = this.getBoolean("player-commands");
+        this.PLAYER_SKILLS = this.getBoolean("player-skills");
         this.PLAYER_SESSIONS = this.getBoolean("player-sessions");
         this.PLAYER_PINGS = this.getInt("player-pings");
         this.USERNAME_CHANGES = this.getBoolean("username-changes");

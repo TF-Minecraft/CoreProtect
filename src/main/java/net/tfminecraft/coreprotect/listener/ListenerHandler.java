@@ -62,6 +62,7 @@ import net.tfminecraft.coreprotect.listener.player.PlayerQuitListener;
 import net.tfminecraft.coreprotect.listener.player.PlayerTakeLecternBookListener;
 import net.tfminecraft.coreprotect.listener.player.ProjectileLaunchListener;
 import net.tfminecraft.coreprotect.listener.player.SignChangeListener;
+import net.tfminecraft.coreprotect.listener.player.SkillCastListener;
 import net.tfminecraft.coreprotect.listener.player.SpawnEggUseListener;
 import net.tfminecraft.coreprotect.listener.world.ChunkPopulateListener;
 import net.tfminecraft.coreprotect.listener.world.LeavesDecayListener;
@@ -203,6 +204,7 @@ public final class ListenerHandler {
         pluginManager.registerEvents(new SpawnEggUseListener(), plugin);
         pluginManager.registerEvents(new PlayerTakeLecternBookListener(), plugin);
         pluginManager.registerEvents(new ProjectileLaunchListener(), plugin);
+        SkillCastListener.register(plugin);
 
         // World Listeners
         pluginManager.registerEvents(new ChunkPopulateListener(), plugin);

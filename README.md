@@ -12,7 +12,7 @@ This repository is TF-Minecraft's fork of CoreProtect, developed by [PlayPro](ht
 - **Detailed activity searches** — narrow results by player, time, action, location, and affected materials.
 - **Targeted recovery** — roll back selected changes and restore previously rolled-back activity.
 - **Recovery previews** — review the effect of a rollback or restore before applying it.
-- **Broad world coverage** — logging includes player block changes, container contents, explosions, fire, liquids, many entity interactions, and where each online player is once a minute.
+- **Broad world coverage** — logging includes player block changes, container contents, explosions, fire, liquids, many entity interactions, skills players use and where they teleport them, and where each online player is once a minute.
 - **Staff investigation tools** — paginated lookups, inventory history, and WorldEdit selection support help investigate incidents of different sizes.
 
 CoreProtect supports both investigation and recovery; the recorded history available to staff depends on the server's logging settings.
