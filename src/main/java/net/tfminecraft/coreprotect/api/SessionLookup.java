@@ -12,6 +12,7 @@ import net.tfminecraft.coreprotect.config.Config;
 import net.tfminecraft.coreprotect.config.ConfigHandler;
 import net.tfminecraft.coreprotect.database.Database;
 import net.tfminecraft.coreprotect.database.statement.UserStatement;
+import net.tfminecraft.coreprotect.model.action.SessionActions;
 import net.tfminecraft.coreprotect.utility.WorldUtils;
 import net.tfminecraft.coreprotect.utility.ErrorReporter;
 
@@ -119,6 +120,7 @@ public class SessionLookup {
                 query.append(WorldUtils.getWidIndex("session"));
             }
             filter.appendWhere(query);
+            query.append(" AND action IN(").append(SessionActions.LOGIN).append(',').append(SessionActions.LOGOUT).append(')');
             query.append(" ORDER BY ").append(ConfigHandler.getDescendingEventOrder());
             filter.appendLimit(query);
 
@@ -162,7 +164,7 @@ public class SessionLookup {
      * @return The SQL query string
      */
     private static String buildSessionQuery(int userId, int checkTime) {
-        return "SELECT time," + ConfigHandler.databaseType.getUserColumn() + ",wid,x,y,z,action FROM " + ConfigHandler.prefix + "session WHERE " + ConfigHandler.databaseType.getUserColumn() + " = " + userId + " AND time > " + checkTime + " ORDER BY " + ConfigHandler.getDescendingEventOrder();
+        return "SELECT time," + ConfigHandler.databaseType.getUserColumn() + ",wid,x,y,z,action FROM " + ConfigHandler.prefix + "session WHERE " + ConfigHandler.databaseType.getUserColumn() + " = " + userId + " AND time > " + checkTime + " AND action IN(" + SessionActions.LOGIN + "," + SessionActions.LOGOUT + ") ORDER BY " + ConfigHandler.getDescendingEventOrder();
     }
 
     /**

@@ -16,6 +16,7 @@ import net.tfminecraft.coreprotect.consumer.Consumer;
 import net.tfminecraft.coreprotect.language.Language;
 import net.tfminecraft.coreprotect.language.Phrase;
 import net.tfminecraft.coreprotect.listener.ListenerHandler;
+import net.tfminecraft.coreprotect.listener.player.PlayerPingListener;
 import net.tfminecraft.coreprotect.thread.CacheHandler;
 import net.tfminecraft.coreprotect.thread.NetworkHandler;
 import net.tfminecraft.coreprotect.thread.Scheduler;
@@ -161,6 +162,9 @@ public class PluginInitializationService {
 
         // Start tick time monitor (only used where native tick timings are unavailable)
         TickTimeMonitor.initialize(plugin);
+
+        // Start player position pings
+        PlayerPingListener.initialize(plugin);
 
         // Start cache cleanup thread
         Thread cacheCleanUpThread = new Thread(new CacheHandler());
