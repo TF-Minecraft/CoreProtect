@@ -29,6 +29,7 @@ import net.tfminecraft.coreprotect.language.Phrase;
 import net.tfminecraft.coreprotect.language.Selector;
 import net.tfminecraft.coreprotect.model.action.EntityActionFilter;
 import net.tfminecraft.coreprotect.model.action.LookupActions;
+import net.tfminecraft.coreprotect.model.action.SkillLog;
 import net.tfminecraft.coreprotect.model.lookup.LookupOutputMode;
 import net.tfminecraft.coreprotect.model.lookup.LookupRollbackState;
 import net.tfminecraft.coreprotect.utility.Chat;
@@ -52,6 +53,9 @@ public class LookupCommand {
         ActionParser.ParseResult actionResult = CommandParser.parseActions(args, true);
         List<Integer> argAction = actionResult.getActions();
         EntityActionFilter argEntityActionFilter = actionResult.getEntityActionFilter();
+        if (actionResult.isSkillLookup()) {
+            argFilters = SkillLog.lookupFilters(argFilters);
+        }
         List<Object> argBlocks = CommandParser.parseRestricted(player, args, argAction);
         Map<Object, Boolean> argExclude = CommandParser.parseExcluded(player, args, argAction);
         List<String> argExcludeUsers = CommandParser.parseExcludedUsers(player, args);

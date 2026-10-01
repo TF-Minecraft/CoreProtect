@@ -505,6 +505,10 @@ public class Queue {
         queueStandardData(new Object[] { null, Process.PLAYER_COMMAND, null, 0, null, 0, 0, null }, new String[] { player.getName(), null }, new Object[] { timestamp, player.getLocation().clone() }, false, Consumer.consumerStrings, message, Consumer.reserveConsumer());
     }
 
+    protected static void queuePlayerSkill(Player player, String message, long timestamp, Location location) {
+        queueStandardData(new Object[] { null, Process.PLAYER_COMMAND, null, 0, null, 0, 0, null }, new String[] { player.getName(), null }, new Object[] { timestamp, location.clone() }, false, Consumer.consumerStrings, message, Consumer.reserveConsumer());
+    }
+
     protected static void queuePlayerInteraction(String user, BlockState block, Material type) {
         queueStandardData(new Object[] { null, Process.PLAYER_INTERACTION, type, 0, null, 0, 0, null }, new String[] { user, null }, block, false, Consumer.reserveConsumer());
     }

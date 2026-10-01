@@ -48,6 +48,8 @@ public class ActionParser {
         String[] argumentArray = inputArguments.clone();
         List<Integer> result = new ArrayList<>();
         EntityActionFilter entityActionFilter = EntityActionFilter.DEFAULT;
+        boolean skillLookup = false;
+        boolean commandLookup = false;
         int count = 0;
         int next = 0;
         for (String argument : argumentArray) {
@@ -65,6 +67,8 @@ public class ActionParser {
                 else if (next == 1 || argument.startsWith("a:") || argument.startsWith("action:")) {
                     result.clear();
                     entityActionFilter = EntityActionFilter.NONE;
+                    skillLookup = false;
+                    commandLookup = false;
                     argument = argument.replaceAll("action:", "");
                     argument = argument.replaceAll("a:", "");
                     if (argument.startsWith("#")) {
@@ -76,6 +80,8 @@ public class ActionParser {
                                 ParseResult parsedAction = parseActions(new String[] { "lookup", "a:" + action }, false);
                                 result.addAll(parsedAction.getActions());
                                 entityActionFilter = entityActionFilter.merge(parsedAction.getEntityActionFilter());
+                                skillLookup |= parsedAction.isSkillLookup();
+                                commandLookup |= parsedAction.getActions().contains(LookupActions.COMMAND) && !parsedAction.isSkillLookup();
                             }
                         }
                         next = 0;
@@ -120,6 +126,12 @@ public class ActionParser {
                     }
                     else if (argument.equals("command") || argument.equals("commands")) {
                         result.add(LookupActions.COMMAND);
+                        commandLookup = true;
+                    }
+                    else if (argument.equals("skill") || argument.equals("skills") || argument.equals("ability") || argument.equals("abilities")) {
+                        // Skill casts are command rows; see SkillLog.
+                        result.add(LookupActions.COMMAND);
+                        skillLookup = true;
                     }
                     else if (argument.equals("logins") || argument.equals("login") || argument.equals("+session") || argument.equals("+sessions") || argument.equals("session+") || argument.equals("+connection") || argument.equals("connection+")) {
                         result.add(LookupActions.SESSION);
@@ -180,17 +192,27 @@ public class ActionParser {
             }
             count++;
         }
-        return new ParseResult(result, entityActionFilter);
+        return new ParseResult(result, entityActionFilter, skillLookup && !commandLookup);
     }
 
     public static final class ParseResult {
 
         private final List<Integer> actions;
         private final EntityActionFilter entityActionFilter;
+        private final boolean skillLookup;
 
-        private ParseResult(List<Integer> actions, EntityActionFilter entityActionFilter) {
+        private ParseResult(List<Integer> actions, EntityActionFilter entityActionFilter, boolean skillLookup) {
             this.actions = actions;
             this.entityActionFilter = entityActionFilter;
+            this.skillLookup = skillLookup;
+        }
+
+        /**
+         * Whether command rows should be limited to skill casts. Asking for commands as well
+         * keeps every command row.
+         */
+        public boolean isSkillLookup() {
+            return skillLookup;
         }
 
         public List<Integer> getActions() {
