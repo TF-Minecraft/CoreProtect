@@ -70,6 +70,7 @@ public class Process {
     public static final int ENTITY_CONTAINER_TRANSITION_UPDATE = 34;
     public static final int ENTITY_INTERACTION = 35;
     public static final int LOCK_CHANGE = 36;
+    public static final int PLAYER_PING = 37;
 
     public static int lastLockUpdate = 0;
     private static volatile int currentConsumerSize = 0;
@@ -413,6 +414,9 @@ public class Process {
                                     break;
                                 case Process.PLAYER_LOGOUT:
                                     PlayerLogoutProcess.process(writeBatch, i, object, forceData, user);
+                                    break;
+                                case Process.PLAYER_PING:
+                                    PlayerPingProcess.process(writeBatch, i, object, forceData, user);
                                     break;
                                 case Process.ENTITY_KILL:
                                     EntityKillProcess.process(writeBatch, writeBatch, writeBatch, i, processId, id, object, user);

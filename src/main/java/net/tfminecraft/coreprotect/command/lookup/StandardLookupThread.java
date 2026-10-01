@@ -392,6 +392,12 @@ public class StandardLookupThread implements Runnable {
                                     leftPadding = leftPadding + Color.WHITE + Strings.padStart("", (timeLength - 50) / 4, ' ');
                                 }
 
+                                if (action == SessionActions.PING) {
+                                    Chat.sendComponent(player, timeago + " " + Color.WHITE + "* " + Color.DARK_AQUA + Phrase.build(Phrase.LOOKUP_PING, Color.DARK_AQUA + dplayer + Color.WHITE));
+                                    Chat.sendComponent(player, Color.WHITE + leftPadding + Color.GREY + "^ " + ChatUtils.getCoordinates(command.getName(), wid, dataX, dataY, dataZ, true, true) + "");
+                                    continue;
+                                }
+
                                 String tag = (action != SessionActions.LOGOUT ? Color.GREEN + "+" : Color.RED + "-");
                                 Chat.sendComponent(player, timeago + " " + tag + " " + Color.DARK_AQUA + Phrase.build(Phrase.LOOKUP_LOGIN, Color.DARK_AQUA + dplayer + Color.WHITE, (action != SessionActions.LOGOUT ? Selector.FIRST : Selector.SECOND)));
                                 Chat.sendComponent(player, Color.WHITE + leftPadding + Color.GREY + "^ " + ChatUtils.getCoordinates(command.getName(), wid, dataX, dataY, dataZ, true, true) + "");

@@ -29,6 +29,7 @@ import net.tfminecraft.coreprotect.database.statement.UserStatement;
 import net.tfminecraft.coreprotect.listener.channel.PluginChannelHandshakeListener;
 import net.tfminecraft.coreprotect.model.action.EntityActionFilter;
 import net.tfminecraft.coreprotect.model.action.LookupActions;
+import net.tfminecraft.coreprotect.model.action.SessionActions;
 import net.tfminecraft.coreprotect.model.action.SignActions;
 import net.tfminecraft.coreprotect.model.item.InventorySources;
 import net.tfminecraft.coreprotect.model.item.ItemTransactionActions;
@@ -733,6 +734,12 @@ public class LookupRaw extends Queue {
                 if (validActions.contains(value)) {
                     validAction = true;
                 }
+            }
+
+            // Pings share the session table, so a session lookup without a session action lists only logins and logouts
+            if (actionList.contains(LookupActions.SESSION) && !validAction) {
+                action = SessionActions.LOGIN + "," + SessionActions.LOGOUT;
+                validAction = true;
             }
 
             String bounds = "";

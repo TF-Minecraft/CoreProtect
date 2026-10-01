@@ -235,6 +235,10 @@ public class Lookup extends Queue {
     }
 
     private static boolean hasSummaryActions(List<Integer> actionList) {
+        // Session lookups reuse the block action ids for login, logout and ping
+        if (actionList.contains(LookupActions.SESSION)) {
+            return false;
+        }
         return actionList.isEmpty() || actionList.contains(LookupActions.BLOCK_BREAK) || actionList.contains(LookupActions.BLOCK_PLACE) || actionList.contains(LookupActions.CONTAINER) || actionList.contains(LookupActions.ITEM);
     }
 

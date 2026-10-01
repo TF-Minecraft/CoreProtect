@@ -131,6 +131,12 @@ public class ActionParser {
                     }
                     else if (argument.equals("session") || argument.equals("sessions") || argument.equals("connection") || argument.equals("connections")) {
                         result.add(LookupActions.SESSION);
+                        result.add(SessionActions.LOGIN);
+                        result.add(SessionActions.LOGOUT);
+                    }
+                    else if (argument.equals("ping") || argument.equals("pings") || argument.equals("position") || argument.equals("positions")) {
+                        result.add(LookupActions.SESSION);
+                        result.add(SessionActions.PING);
                     }
                     else if (argument.equals("username") || argument.equals("usernames") || argument.equals("user") || argument.equals("users") || argument.equals("name") || argument.equals("names") || argument.equals("uuid") || argument.equals("uuids") || argument.equals("username-change") || argument.equals("username-changes") || argument.equals("name-change") || argument.equals("name-changes")) {
                         result.add(LookupActions.USERNAME);

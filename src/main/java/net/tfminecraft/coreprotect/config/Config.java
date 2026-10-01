@@ -111,6 +111,7 @@ public class Config extends Language {
     public int DEFAULT_RADIUS;
     public int DUCKDB_THREADS;
     public int MAX_RADIUS;
+    public int PLAYER_PINGS;
 
     static {
         DEFAULT_VALUES.put("donation-key", "");
@@ -172,6 +173,7 @@ public class Config extends Language {
         DEFAULT_VALUES.put("player-messages", "true");
         DEFAULT_VALUES.put("player-commands", "true");
         DEFAULT_VALUES.put("player-sessions", "true");
+        DEFAULT_VALUES.put("player-pings", "60");
         DEFAULT_VALUES.put("username-changes", "true");
         DEFAULT_VALUES.put("worldedit", "true");
 
@@ -222,6 +224,7 @@ public class Config extends Language {
         HEADERS.put("player-messages", new String[] { "# Logs messages that players send in the chat." });
         HEADERS.put("player-commands", new String[] { "# Logs all commands used by players." });
         HEADERS.put("player-sessions", new String[] { "# Logs the logins and logouts of players." });
+        HEADERS.put("player-pings", new String[] { "# Logs the position of each online player at this interval, in seconds.", "# Search them with \"/co lookup a:ping\". Set to \"0\" to disable." });
         HEADERS.put("username-changes", new String[] { "# Logs when a player changes their Minecraft username." });
         HEADERS.put("worldedit", new String[] { "# Logs changes made via the plugin \"WorldEdit\" if it's in use on your server." });
     }
@@ -301,6 +304,7 @@ public class Config extends Language {
         this.PLAYER_MESSAGES = this.getBoolean("player-messages");
         this.PLAYER_COMMANDS = this.getBoolean("player-commands");
         this.PLAYER_SESSIONS = this.getBoolean("player-sessions");
+        this.PLAYER_PINGS = this.getInt("player-pings");
         this.USERNAME_CHANGES = this.getBoolean("username-changes");
         this.WORLDEDIT = this.getBoolean("worldedit");
     }

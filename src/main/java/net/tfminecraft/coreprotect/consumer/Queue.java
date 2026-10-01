@@ -528,6 +528,10 @@ public class Queue {
         queueStandardData(new Object[] { null, Process.PLAYER_LOGOUT, null, 0, null, 0, time, null }, new String[] { player.getName(), null }, player.getLocation().clone(), false, Consumer.reserveConsumer());
     }
 
+    protected static void queuePlayerPing(Player player, int time) {
+        queueStandardData(new Object[] { null, Process.PLAYER_PING, null, 0, null, 0, time, null }, new String[] { player.getName(), null }, player.getLocation().clone(), false, Consumer.reserveConsumer());
+    }
+
     protected static void queueRollbackUpdate(String user, Location location, List<Object[]> list, int table, int action) {
         if (location == null) {
             location = new Location(Bukkit.getServer().getWorlds().get(0), 0, 0, 0);
