@@ -23,10 +23,11 @@ import net.tfminecraft.coreprotect.thread.Scheduler;
 public final class PlayerPingListener extends Queue implements Listener {
 
     private static final int CHECK_INTERVAL_TICKS = 20;
-    private static final Map<UUID, Integer> NEXT_PING = new ConcurrentHashMap<>();
+    // Time of each player's last ping, or of when the task first saw them
+    private static final Map<UUID, Integer> LAST_PING = new ConcurrentHashMap<>();
 
     public static void initialize(CoreProtect plugin) {
-        NEXT_PING.clear();
+        LAST_PING.clear();
         Scheduler.scheduleSyncRepeatingTask(plugin, () -> checkPlayers(plugin), null, CHECK_INTERVAL_TICKS, CHECK_INTERVAL_TICKS);
     }
 
@@ -50,19 +51,20 @@ public final class PlayerPingListener extends Queue implements Listener {
 
         int interval = Config.getConfig(player.getWorld()).PLAYER_PINGS;
         if (interval <= 0) {
-            NEXT_PING.remove(player.getUniqueId());
+            LAST_PING.remove(player.getUniqueId());
             return;
         }
 
-        Integer nextPing = NEXT_PING.putIfAbsent(player.getUniqueId(), time + interval);
-        if (nextPing != null && time >= nextPing) {
-            NEXT_PING.put(player.getUniqueId(), time + interval);
+        // Compare against the current interval, so a world change or reload applies at once
+        Integer lastPing = LAST_PING.putIfAbsent(player.getUniqueId(), time);
+        if (lastPing != null && time - lastPing >= interval) {
+            LAST_PING.put(player.getUniqueId(), time);
             Queue.queuePlayerPing(player, time);
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        NEXT_PING.remove(event.getPlayer().getUniqueId());
+        LAST_PING.remove(event.getPlayer().getUniqueId());
     }
 }
