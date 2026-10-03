@@ -17,12 +17,12 @@ This repository is TF-Minecraft's fork of CoreProtect, developed by [PlayPro](ht
 
 CoreProtect supports both investigation and recovery; the recorded history available to staff depends on the server's logging settings.
 
-## Credits and license
-
-CoreProtect is an upstream [PlayPro project](https://github.com/PlayPro/CoreProtect), distributed under the [Artistic License 2.0](LICENSE). See [CONTRIBUTING.md](CONTRIBUTING.md) for its contribution policies.
-
 ## Documentation
 
 [Project documentation](https://github.com/TF-Minecraft/Docs/blob/main/projects/CoreProtect/README.md)
 
 Technical documentation is maintained in [TF-Minecraft/Docs](https://github.com/TF-Minecraft/Docs).
+
+## Credits and license
+
+CoreProtect is an upstream [PlayPro project](https://github.com/PlayPro/CoreProtect), distributed under the [Artistic License 2.0](LICENSE). See [CONTRIBUTING.md](CONTRIBUTING.md) for its contribution policies.
