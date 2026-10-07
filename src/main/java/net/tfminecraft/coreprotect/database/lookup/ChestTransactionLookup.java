@@ -186,6 +186,8 @@ public class ChestTransactionLookup {
                     target = target.split(":")[1];
                 }
 
+                target = net.tfminecraft.coreprotect.utility.AuditLabels.item(resultMetadata, resultType, resultAmount, target);
+
                 String coordinateInfo = "";
                 if (entitySpawnRowId != null && (displayWorldId != resultWorldId || displayX != resultX || displayY != resultY || displayZ != resultZ)) {
                     coordinateInfo = ChatUtils.getCoordinateTooltip(resultWorldId, resultX, resultY, resultZ, Phrase.build(Phrase.LOOKUP_ENTITY_ORIGIN), true);

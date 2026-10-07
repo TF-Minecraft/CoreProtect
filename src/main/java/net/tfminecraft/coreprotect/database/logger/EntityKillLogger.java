@@ -17,6 +17,7 @@ import net.tfminecraft.coreprotect.database.statement.EntityStatement;
 import net.tfminecraft.coreprotect.database.statement.UserStatement;
 import net.tfminecraft.coreprotect.event.CoreProtectPreLogEvent;
 import net.tfminecraft.coreprotect.model.action.LookupActions;
+import net.tfminecraft.coreprotect.model.action.MythicIdentity;
 import net.tfminecraft.coreprotect.utility.WorldUtils;
 
 public class EntityKillLogger {
@@ -25,7 +26,7 @@ public class EntityKillLogger {
         throw new IllegalStateException("Database class");
     }
 
-    public static void log(ConsumerWriteBatch preparedStmt, ConsumerWriteBatch preparedStmt2, ConsumerWriteBatch preparedStmtEntityKillLinks, int batchCount, String user, Location location, List<Object> data, int type) {
+    public static void log(ConsumerWriteBatch preparedStmt, ConsumerWriteBatch preparedStmt2, ConsumerWriteBatch preparedStmtEntityKillLinks, int batchCount, String user, Location location, List<Object> data, int type, MythicIdentity identity) {
         try {
             if (ConfigHandler.isBlacklisted(user)){
                 return;
@@ -68,7 +69,7 @@ public class EntityKillLogger {
                 EntitySpawnStatement.addKillLink(preparedStmtEntityKillLinks, (String) data.get(7), entity_key);
             }
 
-            BlockStatement.insert(preparedStmt, batchCount, time, userId, wid, x, y, z, type, entity_key, null, null, LookupActions.ENTITY_KILL, 0);
+            BlockStatement.insert(preparedStmt, batchCount, time, userId, wid, x, y, z, type, entity_key, identity == null ? null : identity.toMetadata(), null, LookupActions.ENTITY_KILL, 0);
         }
         catch (Exception e) {
             Database.handleWriteFailure(e);

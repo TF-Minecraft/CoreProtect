@@ -410,7 +410,12 @@ public class Queue {
     // These auxiliary queues still hold distinct legacy payloads consumed by the matching processors.
     @SuppressWarnings("deprecation")
     protected static void queueEntityKill(String user, Location location, List<Object> data, EntityType type) {
-        queueStandardData(new Object[] { null, Process.ENTITY_KILL, null, 0, null, 0, 0 }, new String[] { user, null }, new Object[] { getBlockLocation(location), type, null }, false, Consumer.consumerObjectList, data, Consumer.reserveConsumer());
+        queueEntityKill(user, location, data, type, null);
+    }
+
+    @SuppressWarnings("deprecation")
+    protected static void queueEntityKill(String user, Location location, List<Object> data, EntityType type, net.tfminecraft.coreprotect.model.action.MythicIdentity identity) {
+        queueStandardData(new Object[] { null, Process.ENTITY_KILL, null, 0, null, 0, 0 }, new String[] { user, null }, new Object[] { getBlockLocation(location), type, identity }, false, Consumer.consumerObjectList, data, Consumer.reserveConsumer());
     }
 
     protected static void queueEntitySpawn(String user, BlockState block, EntityType type, int data) {

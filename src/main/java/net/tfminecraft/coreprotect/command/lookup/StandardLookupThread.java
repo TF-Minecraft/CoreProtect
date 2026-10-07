@@ -36,6 +36,9 @@ import net.tfminecraft.coreprotect.listener.channel.PluginChannelHandshakeListen
 import net.tfminecraft.coreprotect.listener.channel.PluginChannelListener;
 import net.tfminecraft.coreprotect.model.action.EntityActionFilter;
 import net.tfminecraft.coreprotect.model.action.LockChange;
+import net.tfminecraft.coreprotect.model.action.MythicIdentity;
+import net.tfminecraft.coreprotect.database.statement.EntityStatement;
+import net.tfminecraft.coreprotect.utility.AuditLabels;
 import net.tfminecraft.coreprotect.model.action.LookupActions;
 import net.tfminecraft.coreprotect.model.action.SessionActions;
 import net.tfminecraft.coreprotect.model.entity.EntitySpawnRecord;
@@ -321,6 +324,17 @@ public class StandardLookupThread implements Runnable {
                                 ? Lookup.performPartialLookup(statement, player, uuidList, userList, blockList, excludedBlocks, excludedUsers, actions, entityActionFilter, messageFilters, entityContext, finalLocation, radius, rowData, timeStart, timeEnd, (int) pageStart, displayResults, restrict_world, true, entityContainerId, rollbackState)
                                 : lookupPage.getRows();
 
+                        Set<Integer> killedEntities = new HashSet<>();
+                        for (String[] row : lookupList) {
+                            if (row.length > 11 && row[7] != null && row[10] != null
+                                    && Integer.parseInt(row[7]) == LookupActions.ENTITY_KILL
+                                    && Integer.parseInt(row[10]) == -1 && Integer.parseInt(row[5]) != 0
+                                    && (row.length <= 13 || row[13] == null
+                                        || Integer.parseInt(row[13]) != InventorySources.ENTITY_INTERACTION)) {
+                                killedEntities.add(Integer.parseInt(row[6]));
+                            }
+                        }
+                        Map<Integer, List<Object>> killedEntityData = EntityStatement.loadData(connection, killedEntities);
                         Map<Integer, EntitySpawnRecord> entitySpawnRecords = Collections.emptyMap();
                         Map<UUID, Location> loadedEntityLocations = Collections.emptyMap();
                         Set<Integer> entitySpawnRowIds = new HashSet<>();
@@ -462,6 +476,7 @@ public class StandardLookupThread implements Runnable {
                                 Material blockType = ItemUtils.itemFilter(MaterialUtils.getType(dtype), (Integer.parseInt(data[13]) == 0));
                                 String dname = StringUtils.nameFilter(blockType.name().toLowerCase(Locale.ROOT), ddata);
                                 byte[] metadata = data[11] == null ? null : data[11].getBytes(StandardCharsets.ISO_8859_1);
+                                dname = AuditLabels.item(metadata, dtype, amount, dname);
                                 String tooltip = ItemUtils.getEnchantments(metadata, dtype, amount);
                                 Integer itemId = ItemUtils.makeGivableItem(ItemUtils.getItemStack(metadata, dtype, amount));
 
@@ -566,12 +581,18 @@ public class StandardLookupThread implements Runnable {
 
                                 // Functions.sendMessage(player2, timeago+" " + ChatColors.WHITE + "- " + ChatColors.DARK_AQUA+rbd+""+dplayer+" " + ChatColors.WHITE+rbd+""+a+" " + ChatColors.DARK_AQUA+rbd+"#"+dtype+ChatColors.WHITE + ". " + ChatColors.GREY + "(x"+x+"/y"+y+"/z"+z+")");
 
+                                if (!entityInteraction && daction == LookupActions.ENTITY_KILL && amount == -1 && !isPlayer) {
+                                    MythicIdentity identity = MythicIdentity.fromLookupString(data[11]);
+                                    dname = AuditLabels.mob(dname, killedEntityData.get(ddata), identity == null ? null : identity.id());
+                                }
+
                                 Phrase phrase = Phrase.LOOKUP_BLOCK;
                                 String selector = Selector.FIRST;
                                 String action = "a:block";
                                 LockChange lockChange = null;
                                 if (actions.contains(LookupActions.CONTAINER) || actions.contains(5) || actions.contains(LookupActions.ITEM) || amount > -1) {
                                     byte[] metadata = data[11] == null ? null : data[11].getBytes(StandardCharsets.ISO_8859_1);
+                                    dname = AuditLabels.item(metadata, dtype, amount, dname);
                                     String tooltip = ItemUtils.getEnchantments(metadata, dtype, amount);
                                     Integer itemId = ItemUtils.makeGivableItem(ItemUtils.getItemStack(metadata, dtype, amount));
 

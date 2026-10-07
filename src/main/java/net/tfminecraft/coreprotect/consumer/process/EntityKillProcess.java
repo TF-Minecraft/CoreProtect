@@ -9,6 +9,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
 
 import net.tfminecraft.coreprotect.consumer.Consumer;
+import net.tfminecraft.coreprotect.model.action.MythicIdentity;
 import net.tfminecraft.coreprotect.database.logger.EntityKillLogger;
 import net.tfminecraft.coreprotect.utility.EntityUtils;
 
@@ -29,7 +30,8 @@ class EntityKillProcess {
             if (objectLists != null && objectLists.get(id) != null) {
                 List<Object> objectList = objectLists.get(id);
                 int entityId = EntityUtils.getEntityId(type);
-                EntityKillLogger.log(preparedStmt, preparedStmtEntities, preparedStmtEntityKillLinks, batchCount, user, location, objectList, entityId);
+                EntityKillLogger.log(preparedStmt, preparedStmtEntities, preparedStmtEntityKillLinks, batchCount, user, location, objectList, entityId,
+                        values.length > 2 && values[2] instanceof MythicIdentity identity ? identity : null);
             }
         }
     }
