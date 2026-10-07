@@ -13,9 +13,17 @@ This repository is TF-Minecraft's fork of CoreProtect, developed by [PlayPro](ht
 - **Targeted recovery** — roll back selected changes and restore previously rolled-back activity.
 - **Recovery previews** — review the effect of a rollback or restore before applying it.
 - **Broad world coverage** — logging includes player block changes, container contents, explosions, fire, liquids, many entity interactions, skills players use and where they teleport them, and where each online player is once a minute.
+- **Custom item and mob labels** — item and chest lookups show saved MMOItems names and IDs; kill lookups show recorded mob names and, for new MythicMobs deaths, the internal mob ID.
 - **Staff investigation tools** — paginated lookups, inventory history, and WorldEdit selection support help investigate incidents of different sizes.
 
 CoreProtect supports both investigation and recovery; the recorded history available to staff depends on the server's logging settings.
+
+Named ordinary items are marked as renamed; a display name alone does not prove
+MMOItems or MythicMobs identity. These labels also apply to historical records
+where the required metadata was saved. MythicLib and MythicMobs integrations are
+optional, and the vanilla type remains the fallback. Existing material filters,
+aggregate counts and rollback payloads keep their original meaning; custom-ID
+search and custom mob restoration are not added by this change.
 
 ## Documentation
 

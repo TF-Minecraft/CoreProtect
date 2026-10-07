@@ -6,7 +6,7 @@ api-version: '1.21.10'
 folia-supported: true
 website: http://coreprotect.net
 author: Intelli
-softdepend: [WorldEdit, MythicLib]
+softdepend: [WorldEdit, MythicLib, MythicMobs]
 description: >
              Provides block protection for your server.
 libraries:

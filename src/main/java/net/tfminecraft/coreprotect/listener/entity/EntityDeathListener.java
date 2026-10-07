@@ -577,7 +577,7 @@ public final class EntityDeathListener extends Queue implements Listener {
             }
 
             if (!(entity instanceof Player)) {
-                Queue.queueEntityKill(e, entity.getLocation(), data, type);
+                Queue.queueEntityKill(e, entity.getLocation(), data, type, MythicMobListener.take(entity));
             }
             else {
                 Queue.queuePlayerKill(e, entity.getLocation(), entity.getName());

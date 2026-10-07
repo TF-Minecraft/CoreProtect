@@ -205,6 +205,8 @@ public final class ListenerHandler {
         pluginManager.registerEvents(new PlayerTakeLecternBookListener(), plugin);
         pluginManager.registerEvents(new ProjectileLaunchListener(), plugin);
         SkillCastListener.register(plugin);
+        net.tfminecraft.coreprotect.listener.entity.MythicMobListener.register(plugin);
+        net.tfminecraft.coreprotect.utility.AuditLabels.register(plugin);
 
         // World Listeners
         pluginManager.registerEvents(new ChunkPopulateListener(), plugin);
