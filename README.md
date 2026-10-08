@@ -18,12 +18,7 @@ This repository is TF-Minecraft's fork of CoreProtect, developed by [PlayPro](ht
 
 CoreProtect supports both investigation and recovery; the recorded history available to staff depends on the server's logging settings.
 
-Named ordinary items are marked as renamed; a display name alone does not prove
-MMOItems or MythicMobs identity. These labels also apply to historical records
-where the required metadata was saved. MythicLib and MythicMobs integrations are
-optional, and the vanilla type remains the fallback. Existing material filters,
-aggregate counts and rollback payloads keep their original meaning; custom-ID
-search and custom mob restoration are not added by this change.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the upstream contribution policies.
 
 ## Documentation
 
@@ -31,6 +26,16 @@ search and custom mob restoration are not added by this change.
 
 Technical documentation is maintained in [TF-Minecraft/Docs](https://github.com/TF-Minecraft/Docs).
 
-## Credits and license
+## Tests
 
-CoreProtect is an upstream [PlayPro project](https://github.com/PlayPro/CoreProtect), distributed under the [Artistic License 2.0](LICENSE). See [CONTRIBUTING.md](CONTRIBUTING.md) for its contribution policies.
+Run `mvn clean verify` with Java 21 from `master`. JUnit and Mockito tests cover
+custom item and mob labels, MythicMobs identity capture, metadata serialization,
+and kill logging. Surefire writes reports to `target/surefire-reports/`, which
+CI uploads. No coverage report or minimum coverage gate is configured.
+
+The suite does not exercise a live Paper server, real provider plugins, database
+servers, or end-to-end rollback and restore operations.
+
+## License
+
+CoreProtect is distributed under the [Artistic License 2.0](LICENSE).
