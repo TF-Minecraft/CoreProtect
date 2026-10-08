@@ -18,7 +18,7 @@ This repository is TF-Minecraft's fork of CoreProtect, developed by [PlayPro](ht
 
 CoreProtect supports both investigation and recovery; the recorded history available to staff depends on the server's logging settings.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the upstream contribution policies.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the repository contribution policies.
 
 ## Documentation
 
