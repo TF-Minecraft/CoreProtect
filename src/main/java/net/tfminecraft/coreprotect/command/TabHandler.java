@@ -11,19 +11,25 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
+import net.tfminecraft.coreprotect.command.parser.ActionParser;
 import net.tfminecraft.coreprotect.command.parser.RollbackStateParser;
+import net.tfminecraft.coreprotect.config.Config;
 import net.tfminecraft.coreprotect.config.ConfigHandler;
+import net.tfminecraft.coreprotect.model.action.LookupActions;
 
 public class TabHandler implements TabCompleter {
 
     // private static String[] COMMANDS = new String[] { "help", "inspect", "rollback", "restore", "lookup", "purge", "reload", "status", "near", "undo" }; // max 10!
-    private static final String[] HELP = new String[] { "inspect", "rollback", "restore", "lookup", "purge", "teleport", "status", "params", "users", "time", "radius", "action", "include", "exclude", "filter" };
+    private static final String[] HELP = new String[] { "inspect", "rollback", "restore", "lookup", "purge", "teleport", "reload", "status", "params", "users", "time", "radius", "action", "include", "exclude", "filter" };
     private static final String[] PARAMS = new String[] { "user:", "time:", "radius:", "action:", "include:", "exclude:", "filter:", "#container" };
     private static final String[] ACTIONS = new String[] { "block", "+block", "-block", "click", "kill", "spawn", "+container", "-container", "container", "chat", "command", "skill", "+inventory", "-inventory", "inventory", "item", "+item", "-item", "sign", "session", "+session", "-session", "ping", "username" };
     private static final String[] NUMBERS = new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
@@ -32,8 +38,8 @@ public class TabHandler implements TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!(sender instanceof Player) || args.length == 0) {
-            return null;
+        if (args.length == 0) {
+            return List.of();
         }
 
         if (args.length == 1) {
@@ -41,41 +47,61 @@ public class TabHandler implements TabCompleter {
         }
 
         String argument0 = args[0].toLowerCase(Locale.ROOT);
-        String currentArg = args[args.length - 1].toLowerCase(Locale.ROOT).trim();
-        String lastArg = args.length > 1 ? args[args.length - 2].toLowerCase(Locale.ROOT).trim() : "";
+        String currentArg = args[args.length - 1].trim();
+        String currentLower = currentArg.toLowerCase(Locale.ROOT);
+        String lastArg = pendingParameter(args);
+        if (currentArg.contains(":")) {
+            lastArg = "";
+        }
+
+        if (argument0.equals("teleport") || argument0.equals("tp")) {
+            if (args.length == 2 && sender instanceof Player && sender.hasPermission("coreprotect.teleport")) {
+                return handleTeleportCompletions(currentArg);
+            }
+            return List.of();
+        }
+        if (argument0.equals("consumer")) {
+            if (args.length == 2 && sender instanceof ConsoleCommandSender && sender.hasPermission("coreprotect.consumer")) {
+                return StringUtil.copyPartialMatches(currentArg, List.of("pause", "resume"), new ArrayList<>());
+            }
+            return List.of();
+        }
+
+        boolean lookupCommand = hasLookupCommand(argument0, sender);
+        boolean purgeCommand = argument0.equals("purge") && sender.hasPermission("coreprotect.purge");
 
         ParamState paramState = getParamState(sender, args);
 
         // Handle param-specific completions
-        if (isActionParam(lastArg, currentArg) && hasLookupPermission(sender)) {
-            return handleActionParamCompletions(currentArg, lastArg);
+        if (isActionParam(lastArg, currentLower) && lookupCommand) {
+            return handleActionParamCompletions(sender, argument0, currentArg);
         }
-        else if (isUserParam(lastArg, currentArg) && hasLookupPermission(sender)) {
-            return handleUserParamCompletions(currentArg, lastArg);
+        else if (isUserParam(lastArg, currentLower) && lookupCommand) {
+            return completeValues(currentArg, onlineUsers(), true);
         }
-        else if (isTimeParam(lastArg, currentArg) && hasTimePermission(sender)) {
+        else if (isTimeParam(lastArg, currentLower) && (lookupCommand || purgeCommand)) {
             return handleTimeParamCompletions(currentArg, lastArg);
         }
-        else if (isPageParam(lastArg, currentArg) && hasPagePermission(sender)) {
+        else if (isPageParam(lastArg, currentLower) && (argument0.equals("lookup") || argument0.equals("l") || argument0.equals("page")) && hasPagePermission(sender)) {
             return handlePageParamCompletions(currentArg, lastArg);
         }
-        else if (isRadiusParam(lastArg, currentArg) && hasRadiusPermission(sender)) {
+        else if (isRadiusParam(lastArg, currentLower) && (lookupCommand || purgeCommand)) {
             return handleRadiusParamCompletions(currentArg, lastArg, argument0);
         }
-        else if (isMaterialParam(lastArg, currentArg) && hasLookupPermission(sender)) {
-            return handleMaterialParamCompletions(currentArg, lastArg);
+        else if (isMaterialParam(lastArg, currentLower) && (lookupCommand || purgeCommand)) {
+            return handleMaterialParamCompletions(currentArg, lastArg, purgeCommand);
+        }
+        else if (purgeCommand) {
+            return handlePurgeCompletions(currentArg, paramState);
         }
         else if (args.length == 2) {
             return handleSecondArgCompletions(sender, argument0, args[1], paramState);
         }
-        else if (args.length == 3 && argument0.equals("purge") && sender.hasPermission("coreprotect.purge")) {
-            return handlePurgeThirdArgCompletions(args[1], args[2]);
-        }
-        else if (hasLookupCommand(argument0, sender) && (!argument0.equals("l") && !argument0.equals("lookup") || !paramState.hasPage)) {
-            return handleGenericLookupCompletions(argument0, currentArg, paramState);
+        else if (lookupCommand && (!argument0.equals("l") && !argument0.equals("lookup") || !paramState.hasPage)) {
+            return handleGenericLookupCompletions(argument0, currentArg, paramState, sender instanceof Player);
         }
 
-        return Arrays.asList("");
+        return List.of();
     }
 
     private List<String> getFirstLevelCompletions(CommandSender sender, String argument) {
@@ -90,8 +116,25 @@ public class TabHandler implements TabCompleter {
         addCompletionIfPermitted(sender, "coreprotect.purge", "purge", completions);
         addCompletionIfPermitted(sender, "coreprotect.reload", "reload", completions);
         addCompletionIfPermitted(sender, "coreprotect.status", "status", completions);
-        addCompletionIfPermitted(sender, "coreprotect.lookup.near", "near", completions);
+        if ((sender instanceof Player || sender instanceof BlockCommandSender)
+                && (sender.hasPermission("coreprotect.lookup") || sender.hasPermission("coreprotect.lookup.near"))) {
+            completions.add("near");
+        }
         addCompletionIfPermitted(sender, "coreprotect.restore", "undo", completions);
+        if (sender instanceof Player) {
+            addCompletionIfPermitted(sender, "coreprotect.teleport", "teleport", completions);
+            addCompletionIfPermitted(sender, "coreprotect.give", "give", completions);
+            if (hasActivePreview(sender) && (sender.hasPermission("coreprotect.rollback") || sender.hasPermission("coreprotect.restore"))) {
+                completions.add("apply");
+                completions.add("cancel");
+            }
+        }
+        if (sender instanceof ConsoleCommandSender) {
+            addCompletionIfPermitted(sender, "coreprotect.consumer", "consumer", completions);
+        }
+        if (Config.getGlobal().NETWORK_DEBUG) {
+            addCompletionIfPermitted(sender, "coreprotect.networking", "network-debug", completions);
+        }
 
         return StringUtil.copyPartialMatches(arg, completions, new ArrayList<>(completions.size()));
     }
@@ -102,16 +145,9 @@ public class TabHandler implements TabCompleter {
         }
     }
 
-    private boolean hasLookupPermission(CommandSender sender) {
-        return sender.hasPermission("coreprotect.lookup") || sender.hasPermission("coreprotect.rollback") || sender.hasPermission("coreprotect.restore");
-    }
-
-    private boolean hasTimePermission(CommandSender sender) {
-        return hasLookupPermission(sender) || sender.hasPermission("coreprotect.purge");
-    }
-
-    private boolean hasRadiusPermission(CommandSender sender) {
-        return hasTimePermission(sender);
+    private boolean hasActivePreview(CommandSender sender) {
+        List<Object> rollback = ConfigHandler.lastRollback.get(sender.getName());
+        return rollback != null && rollback.size() > 2 && rollback.get(2) instanceof String[] arguments && Arrays.asList(arguments).contains("#preview");
     }
 
     private boolean hasPagePermission(CommandSender sender) {
@@ -146,6 +182,56 @@ public class TabHandler implements TabCompleter {
         return lastArg.equals("i:") || lastArg.equals("include:") || lastArg.equals("item:") || lastArg.equals("items:") || lastArg.equals("b:") || lastArg.equals("block:") || lastArg.equals("blocks:") || currentArg.startsWith("i:") || currentArg.startsWith("include:") || currentArg.startsWith("item:") || currentArg.startsWith("items:") || currentArg.startsWith("b:") || currentArg.startsWith("block:") || currentArg.startsWith("blocks:") || lastArg.equals("e:") || lastArg.equals("exclude:") || currentArg.startsWith("e:") || currentArg.startsWith("exclude:");
     }
 
+    // Only user/material lists continue across spaces after a comma. Action lists do not.
+    private String pendingParameter(String[] args) {
+        String pending = "";
+        for (int index = 1; index < args.length - 1; index++) {
+            String token = args[index].toLowerCase(Locale.ROOT).trim();
+            int colon = token.indexOf(':');
+            String marker = colon >= 0 ? token.substring(0, colon + 1) : pending;
+            String value = colon >= 0 ? token.substring(colon + 1) : token;
+            boolean list = isUserParam("", marker) || isMaterialParam("", marker);
+            boolean parameter = list || isActionParam("", marker) || isTimeParam("", marker) || isRadiusParam("", marker) || isPageParam("", marker);
+            pending = parameter && ((colon >= 0 && value.isEmpty()) || (list && value.endsWith(","))) ? marker : "";
+        }
+        return pending;
+    }
+
+    private List<String> onlineUsers() {
+        return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+    }
+
+    // Bukkit replaces the current space-delimited token, including its marker/list prefix.
+    private List<String> completeValues(String currentArg, List<String> values, boolean allowList) {
+        int colon = currentArg.indexOf(':');
+        int start = colon + 1;
+        if (allowList) {
+            start = Math.max(start, currentArg.lastIndexOf(',') + 1);
+        }
+        else if (currentArg.indexOf(',') >= 0) {
+            return List.of();
+        }
+        String prefix = currentArg.substring(0, start);
+        String partial = currentArg.substring(start);
+        List<String> matches = StringUtil.copyPartialMatches(partial, values, new ArrayList<>());
+        return matches.stream().distinct().map(value -> prefix + value).collect(Collectors.toList());
+    }
+
+    private List<String> handleTeleportCompletions(String currentArg) {
+        List<String> worlds = new ArrayList<>();
+        for (World world : Bukkit.getWorlds()) {
+            boolean singleToken = world.getName().chars().noneMatch(Character::isWhitespace);
+            if (singleToken) {
+                worlds.add(world.getName());
+            }
+            Integer id = ConfigHandler.worlds.get(world.getName());
+            if (id != null && (!singleToken || StringUtil.startsWithIgnoreCase(currentArg, "wid:"))) {
+                worlds.add("wid:" + id);
+            }
+        }
+        return StringUtil.copyPartialMatches(currentArg, worlds, new ArrayList<>());
+    }
+
     private static class ParamState {
         boolean hasUser;
         boolean hasAction;
@@ -159,6 +245,9 @@ public class TabHandler implements TabCompleter {
         boolean hasSummary;
         boolean hasRollbackState;
         boolean hasPreview;
+        boolean hasVerbose;
+        boolean hasSilent;
+        boolean hasOptimize;
         boolean hasPage;
         boolean validContainer;
         boolean pageLookup;
@@ -172,7 +261,7 @@ public class TabHandler implements TabCompleter {
             state.pageLookup = true;
         }
 
-        for (int i = 1; i < args.length; i++) {
+        for (int i = 1; i < args.length - 1; i++) {
             String arg = args[i].toLowerCase(Locale.ROOT);
             if (arg.equals("#container")) {
                 state.hasContainer = true;
@@ -188,6 +277,15 @@ public class TabHandler implements TabCompleter {
             }
             else if (arg.equals("#preview")) {
                 state.hasPreview = true;
+            }
+            else if (arg.equals("#verbose") || arg.equals("#v") || arg.equals("verbose") || arg.equals("v") || arg.equals("noisy") || arg.equals("n")) {
+                state.hasVerbose = true;
+            }
+            else if (arg.equals("#silent")) {
+                state.hasSilent = true;
+            }
+            else if (arg.equals("#optimize")) {
+                state.hasOptimize = true;
             }
             else if (arg.startsWith("f:") || arg.startsWith("filter:")) {
                 state.hasFilter = true;
@@ -233,44 +331,31 @@ public class TabHandler implements TabCompleter {
         return state;
     }
 
-    private List<String> handleActionParamCompletions(String currentArg, String lastArg) {
-        String arg = "";
-        String filter = lastArg;
-
-        if (currentArg.contains(":")) {
-            String[] split = currentArg.split(":", 2);
-            filter = split[0] + ":";
-            if (split.length > 1) {
-                arg = split[1];
+    private List<String> handleActionParamCompletions(CommandSender sender, String command, String currentArg) {
+        boolean lookup = command.equals("lookup") || command.equals("l");
+        List<String> actions = new ArrayList<>();
+        for (String action : ACTIONS) {
+            String category = action.replaceFirst("^[+-]", "");
+            if (lookup) {
+                String permission = category.equals("skill") ? "command" : category.equals("ping") ? "session" : category;
+                if (!sender.hasPermission("coreprotect.lookup." + permission)) {
+                    continue;
+                }
             }
+            else if (!List.of("block", "kill", "spawn", "container", "inventory").contains(category)) {
+                continue;
+            }
+            actions.add(action);
         }
-
-        List<String> completions = new ArrayList<>(Arrays.asList(ACTIONS));
-        for (int index = 0; index < completions.size(); index++) {
-            completions.set(index, filter + completions.get(index));
+        List<String> completions = completeValues(currentArg, actions, lookup);
+        if (lookup) {
+            completions.removeIf(value -> {
+                String argument = value.contains(":") ? value : "a:" + value;
+                ActionParser.ParseResult parsed = ActionParser.parseActions(new String[] { "lookup", argument }, true);
+                return parsed.isSkillLookup() && parsed.getActions().stream().anyMatch(action -> action != LookupActions.COMMAND);
+            });
         }
-        return StringUtil.copyPartialMatches(filter + arg, completions, new ArrayList<>(completions.size()));
-    }
-
-    private List<String> handleUserParamCompletions(String currentArg, String lastArg) {
-        if (lastArg.equals("u:") || lastArg.equals("user:") || lastArg.equals("users:") || lastArg.equals("p:")) {
-            return null;
-        }
-
-        String arg = "";
-        String[] split = currentArg.split(":", 2);
-        String filter = split[0] + ":";
-        if (split.length > 1) {
-            arg = split[1];
-        }
-
-        List<String> completions = Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
-
-        for (int index = 0; index < completions.size(); index++) {
-            completions.set(index, filter + completions.get(index));
-        }
-
-        return StringUtil.copyPartialMatches(filter + arg, completions, new ArrayList<>(completions.size()));
+        return completions;
     }
 
     private List<String> handleTimeParamCompletions(String currentArg, String lastArg) {
@@ -339,7 +424,7 @@ public class TabHandler implements TabCompleter {
             return StringUtil.copyPartialMatches(filter + arg, completions, new ArrayList<>(completions.size()));
         }
 
-        return null;
+        return List.of();
     }
 
     private List<String> handleRadiusParamCompletions(String currentArg, String lastArg, String baseCommand) {
@@ -383,31 +468,30 @@ public class TabHandler implements TabCompleter {
             return StringUtil.copyPartialMatches(filter + arg, completions, new ArrayList<>(completions.size()));
         }
 
-        return null;
+        return List.of();
     }
 
-    private List<String> handleMaterialParamCompletions(String currentArg, String lastArg) {
-        String filter = lastArg;
-        String arg = "";
-        if (currentArg.contains(":")) {
-            String[] split = currentArg.split(":", 2);
-            filter = split[0] + ":";
-            if (split.length > 1) {
-                arg = split[1];
+    private List<String> handleMaterialParamCompletions(String currentArg, String lastArg, boolean purge) {
+        String marker = currentArg.contains(":") ? currentArg.substring(0, currentArg.indexOf(':') + 1).toLowerCase(Locale.ROOT) : lastArg;
+        boolean exclude = marker.equals("e:") || marker.equals("exclude:");
+        if (purge && exclude) {
+            return List.of();
+        }
+        initializeMaterialsIfNeeded();
+        List<String> completions = new ArrayList<>(materials);
+        if (!purge) {
+            // The parser only accepts entity types already recorded in its identifier cache.
+            for (EntityType type : EntityType.values()) {
+                String name = type.name().toLowerCase(Locale.ROOT);
+                if (type != EntityType.UNKNOWN && ConfigHandler.entities.containsKey(name)) {
+                    completions.add(name);
+                }
+            }
+            if (exclude) {
+                completions.addAll(onlineUsers());
             }
         }
-        else {
-            filter = "";
-            arg = currentArg;
-        }
-
-        initializeMaterialsIfNeeded();
-
-        List<String> completions = new ArrayList<>(materials);
-        for (int index = 0; index < completions.size(); index++) {
-            completions.set(index, filter + completions.get(index));
-        }
-        return StringUtil.copyPartialMatches(filter + arg, completions, new ArrayList<>(completions.size()));
+        return completeValues(currentArg, completions, true);
     }
 
     private void initializeMaterialsIfNeeded() {
@@ -446,41 +530,39 @@ public class TabHandler implements TabCompleter {
             List<String> completions = new ArrayList<>(Arrays.asList(HELP));
             return StringUtil.copyPartialMatches(argument1, completions, new ArrayList<>(completions.size()));
         }
-        else if (argument0.equals("purge") && sender.hasPermission("coreprotect.purge")) {
-            List<String> completions = new ArrayList<>(Arrays.asList("t:", "r:", "i:"));
-            return StringUtil.copyPartialMatches(argument1, completions, new ArrayList<>(completions.size()));
-        }
         else if (hasLookupCommand(argument0, sender)) {
-            List<String> completions = new ArrayList<>(filterParams(true, argument0, argument1, paramState));
+            List<String> completions = new ArrayList<>(filterParams(true, argument0, argument1, paramState, sender instanceof Player));
             completions.addAll(Bukkit.getOnlinePlayers().stream().filter(player -> player.getName().toLowerCase(Locale.ROOT).startsWith(argument1)).map(Player::getName).collect(Collectors.toList()));
             return StringUtil.copyPartialMatches(argument1, completions, new ArrayList<>(completions.size()));
         }
 
-        return null;
+        return List.of();
     }
 
-    private List<String> handlePurgeThirdArgCompletions(String arg1, String arg2) {
-        String argument1 = arg1.toLowerCase(Locale.ROOT);
-        String argument2 = arg2.toLowerCase(Locale.ROOT);
-
-        if (argument1.startsWith("t:")) {
-            List<String> completions = new ArrayList<>(Arrays.asList("r:", "i:"));
-            return StringUtil.copyPartialMatches(argument2, completions, new ArrayList<>(completions.size()));
+    private List<String> handlePurgeCompletions(String currentArg, ParamState state) {
+        List<String> params = new ArrayList<>();
+        if (!state.hasTime) {
+            params.addAll(List.of("t:", "time:"));
         }
-        else if (argument1.startsWith("r:") || argument1.startsWith("i:")) {
-            List<String> completions = new ArrayList<>(Arrays.asList("t:"));
-            return StringUtil.copyPartialMatches(argument2, completions, new ArrayList<>(completions.size()));
+        if (!state.hasRadius) {
+            params.addAll(List.of("r:", "radius:"));
         }
-        return Arrays.asList("");
+        if (!state.hasInclude) {
+            params.addAll(List.of("i:", "include:"));
+        }
+        if (!state.hasOptimize) {
+            params.add("#optimize");
+        }
+        return StringUtil.copyPartialMatches(currentArg, params, new ArrayList<>());
     }
 
-    private List<String> handleGenericLookupCompletions(String cmd, String currentArg, ParamState paramState) {
-        ArrayList<String> params = filterParams(false, cmd, currentArg, paramState);
+    private List<String> handleGenericLookupCompletions(String cmd, String currentArg, ParamState paramState, boolean player) {
+        ArrayList<String> params = filterParams(false, cmd, currentArg, paramState, player);
         List<String> completions = new ArrayList<>(params);
         return StringUtil.copyPartialMatches(currentArg, completions, new ArrayList<>(completions.size()));
     }
 
-    private ArrayList<String> filterParams(boolean firstParam, String lastArgument, String argument, ParamState state) {
+    private ArrayList<String> filterParams(boolean firstParam, String lastArgument, String argument, ParamState state, boolean player) {
         ArrayList<String> params = new ArrayList<>();
         for (String param : PARAMS) {
             if (param.equals("user:") && !state.hasUser) {
@@ -519,8 +601,14 @@ public class TabHandler implements TabCompleter {
                 params.add("#rolledback");
                 params.add("#restored");
             }
-            if (!state.hasPreview) {
+            if (!state.hasPreview && player && !lastArgument.equals("lookup") && !lastArgument.equals("l")) {
                 params.add("#preview");
+            }
+            if (!state.hasVerbose) {
+                params.add("#verbose");
+            }
+            if (!state.hasSilent) {
+                params.add("#silent");
             }
         }
 
