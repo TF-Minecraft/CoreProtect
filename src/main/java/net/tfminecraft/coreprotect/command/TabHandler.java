@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -115,7 +116,10 @@ public class TabHandler implements TabCompleter {
         addCompletionIfPermitted(sender, "coreprotect.purge", "purge", completions);
         addCompletionIfPermitted(sender, "coreprotect.reload", "reload", completions);
         addCompletionIfPermitted(sender, "coreprotect.status", "status", completions);
-        addCompletionIfPermitted(sender, "coreprotect.lookup.near", "near", completions);
+        if ((sender instanceof Player || sender instanceof BlockCommandSender)
+                && (sender.hasPermission("coreprotect.lookup") || sender.hasPermission("coreprotect.lookup.near"))) {
+            completions.add("near");
+        }
         addCompletionIfPermitted(sender, "coreprotect.restore", "undo", completions);
         if (sender instanceof Player) {
             addCompletionIfPermitted(sender, "coreprotect.teleport", "teleport", completions);

@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -118,6 +119,21 @@ class TabHandlerTest {
         assertEquals(List.of(), complete(console, "co", "consumer", "pause", ""));
         permissions.remove("coreprotect.consumer");
         assertEquals(List.of(), complete(console, "co", "consumer", "pa"));
+    }
+
+    @Test
+    void nearRequiresALocatedSenderAndAcceptsEitherExecutionPermission() {
+        BlockCommandSender block = sender(BlockCommandSender.class, "CommandBlock");
+        for (String permission : List.of("coreprotect.lookup", "coreprotect.lookup.near")) {
+            permissions.clear();
+            permissions.add(permission);
+            assertEquals(List.of("near"), complete(player, "co", "nE"));
+            assertEquals(List.of("near"), complete(block, "co", "nE"));
+            assertEquals(List.of(), complete(console, "co", "nE"));
+        }
+        permissions.clear();
+        assertEquals(List.of(), complete(player, "co", "near"));
+        assertEquals(List.of(), complete(block, "co", "near"));
     }
 
     @ParameterizedTest
