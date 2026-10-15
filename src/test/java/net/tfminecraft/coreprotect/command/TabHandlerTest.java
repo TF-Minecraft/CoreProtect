@@ -126,6 +126,7 @@ class TabHandlerTest {
         permissions.add("coreprotect.teleport");
         assertEquals(List.of("World"), complete(player, "co", verb, "wO"));
         assertEquals(List.of("wid:7"), complete(player, "co", verb, "wid:"));
+        assertEquals(List.of("wid:7"), complete(player, "co", verb, "WID:"));
         assertEquals(List.of(), complete(player, "co", verb, "unloaded"));
         assertEquals(List.of(), complete(player, "co", verb, "World", ""));
         assertEquals(List.of(), complete(player, "co", verb, "World", "1", "a:ch"));

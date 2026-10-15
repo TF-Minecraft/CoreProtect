@@ -221,7 +221,7 @@ public class TabHandler implements TabCompleter {
                 worlds.add(world.getName());
             }
             Integer id = ConfigHandler.worlds.get(world.getName());
-            if (id != null && (!singleToken || currentArg.startsWith("wid:"))) {
+            if (id != null && (!singleToken || StringUtil.startsWithIgnoreCase(currentArg, "wid:"))) {
                 worlds.add("wid:" + id);
             }
         }
