@@ -849,8 +849,9 @@ public class LookupRaw extends Queue {
             else if (inventoryQuery || actionExclude.length() > 0 || includeBlock.length() > 0 || includeEntity.length() > 0 || excludeBlock.length() > 0 || excludeEntity.length() > 0) {
                 queryBlock = queryBlock + " action NOT IN(-1) AND";
             }
-            if (!validAction && lookup && actionList.isEmpty() && !canLookupPvp(user)) {
-                // Lookups without an action list fights only for staff who may see them
+            if (!validAction && actionList.isEmpty() && (!lookup || !canLookupPvp(user))) {
+                // Rollbacks never use fights, and lookups without an action list show them only to staff
+                // who may see them. Filtering here keeps row limits and counts to the rows that remain.
                 queryBlock = queryBlock + " action NOT IN(" + LookupActions.PVP_HIT + "," + LookupActions.PVP_KNOCKOUT + "," + LookupActions.PVP_KILL + ") AND";
             }
 
