@@ -1401,7 +1401,8 @@ public class LookupRaw extends Queue {
         for (Integer id : EntitySpawnTracking.getPlacedEntityTypeIds()) {
             ids.add(Integer.toString(id));
         }
-        return ids.length() == 0 ? "0" : ids.toString();
+        // Type 0 is a player victim, so an empty list must not fall back to it
+        return ids.length() == 0 ? "-1" : ids.toString();
     }
 
     private static String entitySpawnTimeQuery(long startTime, long endTime) {
