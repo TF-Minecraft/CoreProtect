@@ -30,6 +30,7 @@ import net.tfminecraft.coreprotect.consumer.process.Process;
 import net.tfminecraft.coreprotect.listener.block.BlockUtil;
 import net.tfminecraft.coreprotect.model.BlockGroup;
 import net.tfminecraft.coreprotect.model.action.LockChange;
+import net.tfminecraft.coreprotect.model.action.PvpEvent;
 import net.tfminecraft.coreprotect.model.entity.EntityContainerRollbackUpdate;
 import net.tfminecraft.coreprotect.model.entity.EntityContainerTransaction;
 import net.tfminecraft.coreprotect.model.entity.EntityInteraction;
@@ -520,6 +521,10 @@ public class Queue {
 
     protected static boolean queueLockChange(String user, BlockState block, Material type, LockChange lockChange) {
         return queueStandardData(new Object[] { null, Process.LOCK_CHANGE, type, 0, null, 0, 0, null }, new String[] { user, null }, new Object[] { block, lockChange }, false, Consumer.reserveConsumer());
+    }
+
+    protected static boolean queuePlayerPvp(String attacker, Location location, String victim, int action, PvpEvent pvp) {
+        return queueStandardData(new Object[] { null, Process.PLAYER_PVP, null, 0, null, 0, 0, null }, new String[] { attacker, null }, new Object[] { location.clone(), victim, action, pvp }, false, Consumer.reserveConsumer());
     }
 
     protected static void queuePlayerKill(String user, Location location, String player) {

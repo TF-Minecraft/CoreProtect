@@ -71,6 +71,7 @@ public class Process {
     public static final int ENTITY_INTERACTION = 35;
     public static final int LOCK_CHANGE = 36;
     public static final int PLAYER_PING = 37;
+    public static final int PLAYER_PVP = 38;
 
     public static int lastLockUpdate = 0;
     private static volatile int currentConsumerSize = 0;
@@ -438,6 +439,9 @@ public class Process {
                                     break;
                                 case Process.PLAYER_KILL:
                                     PlayerKillProcess.process(writeBatch, i, id, object, user);
+                                    break;
+                                case Process.PLAYER_PVP:
+                                    PlayerPvpProcess.process(writeBatch, i, object, user);
                                     break;
                                 case Process.BLOCKDATA_INSERT:
                                     BlockDataInsertProcess.process(writeBatch, statement, i, object, forceData);

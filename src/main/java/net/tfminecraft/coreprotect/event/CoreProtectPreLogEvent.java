@@ -21,7 +21,8 @@ public class CoreProtectPreLogEvent extends Event implements Cancellable {
         ITEM_TRANSACTION,
         PLAYER_COMMAND,
         ENTITY_SPAWN,
-        ENTITY_INTERACTION
+        ENTITY_INTERACTION,
+        PLAYER_PVP
     }
 
     private static final HandlerList handlers = new HandlerList();

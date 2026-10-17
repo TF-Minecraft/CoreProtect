@@ -272,6 +272,7 @@ class TabHandlerTest {
             List.of("coreprotect.lookup.block", "a:block", "a:+block", "a:-block"),
             List.of("coreprotect.lookup.click", "a:click"),
             List.of("coreprotect.lookup.kill", "a:kill"),
+            List.of("coreprotect.lookup.pvp", "a:pvp", "a:hit", "a:knockout", "a:pvp-kill"),
             List.of("coreprotect.lookup.spawn", "a:spawn"),
             List.of("coreprotect.lookup.container", "a:+container", "a:-container", "a:container"),
             List.of("coreprotect.lookup.chat", "a:chat"),

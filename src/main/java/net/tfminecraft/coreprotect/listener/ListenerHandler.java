@@ -57,6 +57,7 @@ import net.tfminecraft.coreprotect.listener.player.PlayerInteractListener;
 import net.tfminecraft.coreprotect.listener.player.PlayerItemBreakListener;
 import net.tfminecraft.coreprotect.listener.player.PlayerJoinListener;
 import net.tfminecraft.coreprotect.listener.player.PlayerPingListener;
+import net.tfminecraft.coreprotect.listener.player.PlayerPvpListener;
 import net.tfminecraft.coreprotect.listener.player.PlayerPickupArrowListener;
 import net.tfminecraft.coreprotect.listener.player.PlayerQuitListener;
 import net.tfminecraft.coreprotect.listener.player.PlayerTakeLecternBookListener;
@@ -200,6 +201,7 @@ public final class ListenerHandler {
         pluginManager.registerEvents(new PlayerJoinListener(), plugin);
         pluginManager.registerEvents(new PlayerQuitListener(), plugin);
         pluginManager.registerEvents(new PlayerPingListener(), plugin);
+        pluginManager.registerEvents(new PlayerPvpListener(), plugin);
         pluginManager.registerEvents(new SignChangeListener(), plugin);
         pluginManager.registerEvents(new SpawnEggUseListener(), plugin);
         pluginManager.registerEvents(new PlayerTakeLecternBookListener(), plugin);

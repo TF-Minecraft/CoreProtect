@@ -253,6 +253,10 @@ public class LookupCommand {
                 Chat.sendMessage(player, Color.DARK_AQUA + "CoreProtect " + Color.WHITE + "- " + Phrase.build(Phrase.NO_PERMISSION));
                 return;
             }
+            if (argAction.stream().anyMatch(LookupActions::isPvp) && !player.hasPermission("coreprotect.lookup.pvp")) {
+                Chat.sendMessage(player, Color.DARK_AQUA + "CoreProtect " + Color.WHITE + "- " + Phrase.build(Phrase.NO_PERMISSION));
+                return;
+            }
             if (argAction.contains(LookupActions.ENTITY_SPAWN) && !player.hasPermission("coreprotect.lookup.spawn")) {
                 Chat.sendMessage(player, Color.DARK_AQUA + "CoreProtect " + Color.WHITE + "- " + Phrase.build(Phrase.NO_PERMISSION));
                 return;

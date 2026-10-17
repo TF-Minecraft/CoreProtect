@@ -153,6 +153,8 @@ public class LookupRaw extends Queue {
         List<Object[]> list = new ArrayList<>();
         List<Integer> invalidRollbackActions = new ArrayList<>();
         invalidRollbackActions.add(LookupActions.INTERACTION);
+        // PvP rows record fights, not world changes, so nothing restores or removes them
+        invalidRollbackActions.addAll(LookupActions.PVP_ACTIONS);
         if (!entityActionFilter.includesAnySpawn(actionList, Config.getGlobal().ROLLBACK_ENTITIES)) {
             invalidRollbackActions.add(LookupActions.ENTITY_SPAWN);
         }
@@ -442,7 +444,7 @@ public class LookupRaw extends Queue {
         try {
             Set<UUID> loadedEntityUuids = entityContext.getLoadedEntityUuids();
             Set<UUID> loadedEntityCandidates = entityContext.getLoadedEntityCandidates();
-            List<Integer> validActions = Arrays.asList(LookupActions.BLOCK_BREAK, LookupActions.BLOCK_PLACE, LookupActions.INTERACTION, LookupActions.ENTITY_KILL, LookupActions.ENTITY_SPAWN);
+            List<Integer> validActions = Arrays.asList(LookupActions.BLOCK_BREAK, LookupActions.BLOCK_PLACE, LookupActions.INTERACTION, LookupActions.ENTITY_KILL, LookupActions.ENTITY_SPAWN, LookupActions.PVP_HIT, LookupActions.PVP_KNOCKOUT, LookupActions.PVP_KILL);
             if (radius != null) {
                 restrictWorld = true;
             }
@@ -1054,7 +1056,7 @@ public class LookupRaw extends Queue {
                 }
 
                 if (includeBlock.length() > 0 || excludeBlock.length() > 0) {
-                    baseQuery = baseQuery.replace("action NOT IN(-1)", "action NOT IN(" + LookupActions.ENTITY_KILL + "," + LookupActions.ENTITY_SPAWN + ")"); // if block specified for include/exclude, filter out entity data
+                    baseQuery = baseQuery.replace("action NOT IN(-1)", "action NOT IN(" + LookupActions.NON_BLOCK_ACTIONS + ")"); // if block specified for include/exclude, filter out entity data
                 }
 
                 String sourceQuery = restrictSource(baseQuery, pageRows, InventorySources.BLOCK);
