@@ -849,6 +849,10 @@ public class LookupRaw extends Queue {
             else if (inventoryQuery || actionExclude.length() > 0 || includeBlock.length() > 0 || includeEntity.length() > 0 || excludeBlock.length() > 0 || excludeEntity.length() > 0) {
                 queryBlock = queryBlock + " action NOT IN(-1) AND";
             }
+            if (!validAction && lookup && actionList.isEmpty() && !canLookupPvp(user)) {
+                // Lookups without an action list fights only for staff who may see them
+                queryBlock = queryBlock + " action NOT IN(" + LookupActions.PVP_HIT + "," + LookupActions.PVP_KNOCKOUT + "," + LookupActions.PVP_KILL + ") AND";
+            }
 
             if (includeBlock.length() > 0 || includeEntity.length() > 0) {
                 queryBlock = queryBlock + " type IN(" + (includeBlock.length() > 0 ? includeBlock : "0") + ") AND";
@@ -1394,6 +1398,10 @@ public class LookupRaw extends Queue {
         else if (includeOther) {
             predicates.add("(action=" + action + " AND type NOT IN(" + placedEntityTypes + "))");
         }
+    }
+
+    static boolean canLookupPvp(CommandSender user) {
+        return user == null || user.hasPermission("coreprotect.lookup.pvp");
     }
 
     private static String placedEntityTypeIds() {

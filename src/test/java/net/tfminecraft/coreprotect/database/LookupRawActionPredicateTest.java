@@ -32,6 +32,16 @@ class LookupRawActionPredicateTest {
     }
 
     @Test
+    void onlyStaffWithThePvpPermissionSeeFightsInActionlessLookups() {
+        var staff = mock(org.bukkit.command.CommandSender.class);
+        when(staff.hasPermission("coreprotect.lookup.pvp")).thenReturn(true);
+        var builder = mock(org.bukkit.command.CommandSender.class);
+        assertTrue(LookupRaw.canLookupPvp(null));
+        assertTrue(LookupRaw.canLookupPvp(staff));
+        assertFalse(LookupRaw.canLookupPvp(builder));
+    }
+
+    @Test
     void pvpLookupsSelectOnlyTheirOwnActions() throws Exception {
         String pvp = predicate("14,15,16", LookupActions.PVP_ACTIONS, EntityActionFilter.NONE);
         assertEquals("(action IN(14,15,16))", pvp);

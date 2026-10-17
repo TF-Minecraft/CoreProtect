@@ -584,6 +584,11 @@ public class LookupCommand {
                     argExclude = ConfigHandler.lookupElist.get(player.getName());
                     argExcludeUsers = ConfigHandler.lookupEUserlist.get(player.getName());
                     argAction = ConfigHandler.lookupAlist.get(player.getName());
+                    // A page lookup reuses the saved actions, so check them against the current permissions
+                    if (argAction != null && argAction.stream().anyMatch(LookupActions::isPvp) && !player.hasPermission("coreprotect.lookup.pvp")) {
+                        Chat.sendMessage(player, Color.DARK_AQUA + "CoreProtect " + Color.WHITE + "- " + Phrase.build(Phrase.NO_PERMISSION));
+                        return;
+                    }
                     argEntityActionFilter = ConfigHandler.lookupEntityActionFilter.getOrDefault(player.getName(), EntityActionFilter.DEFAULT);
                     argFilters = ConfigHandler.lookupFlist.getOrDefault(player.getName(), Collections.emptyList());
                     argRadius = ConfigHandler.lookupRadius.get(player.getName());
