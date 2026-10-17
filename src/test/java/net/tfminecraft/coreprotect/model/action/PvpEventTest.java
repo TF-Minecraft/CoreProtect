@@ -58,6 +58,8 @@ class PvpEventTest {
         assertEquals("knockout", LookupActions.getActionString(LookupActions.PVP_KNOCKOUT));
         assertEquals("pvp-kill", LookupActions.getActionString(LookupActions.PVP_KILL));
         assertTrue(LookupActions.isPvp(LookupActions.PVP_KILL));
+        assertEquals(net.tfminecraft.coreprotect.api.CoreProtectAction.PVP_KNOCKOUT, net.tfminecraft.coreprotect.api.CoreProtectAction.fromId(LookupActions.PVP_KNOCKOUT));
+        assertEquals("pvp-kill", net.tfminecraft.coreprotect.api.CoreProtectAction.PVP_KILL.actionString());
         assertFalse(LookupActions.isPvp(LookupActions.ENTITY_KILL));
         for (int action : LookupActions.PVP_ACTIONS) {
             assertTrue(Arrays.asList(LookupActions.NON_BLOCK_ACTIONS.split(",")).contains(Integer.toString(action)));

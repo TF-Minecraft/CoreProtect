@@ -105,7 +105,7 @@ public class CoreProtectAPI extends Queue {
     }
 
     private static boolean isSupportedLegacyAction(Integer action) {
-        return action != null && (action == LookupActions.BLOCK_BREAK || action == LookupActions.BLOCK_PLACE || action == LookupActions.INTERACTION || action == LookupActions.ENTITY_KILL || action == LookupActions.ENTITY_SPAWN);
+        return action != null && (action == LookupActions.BLOCK_BREAK || action == LookupActions.BLOCK_PLACE || action == LookupActions.INTERACTION || action == LookupActions.ENTITY_KILL || action == LookupActions.ENTITY_SPAWN || LookupActions.isPvp(action));
     }
 
     /**

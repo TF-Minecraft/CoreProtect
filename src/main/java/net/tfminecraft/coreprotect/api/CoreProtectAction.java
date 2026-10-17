@@ -18,7 +18,10 @@ public enum CoreProtectAction {
     SIGN(LookupActions.SIGN),
     ITEM(LookupActions.ITEM),
     UNKNOWN(-1),
-    ENTITY_SPAWN(LookupActions.ENTITY_SPAWN);
+    ENTITY_SPAWN(LookupActions.ENTITY_SPAWN),
+    PVP_HIT(LookupActions.PVP_HIT),
+    PVP_KNOCKOUT(LookupActions.PVP_KNOCKOUT),
+    PVP_KILL(LookupActions.PVP_KILL);
 
     private final int id;
 
