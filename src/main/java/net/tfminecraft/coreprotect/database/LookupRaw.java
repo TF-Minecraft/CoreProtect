@@ -153,6 +153,8 @@ public class LookupRaw extends Queue {
         List<Object[]> list = new ArrayList<>();
         List<Integer> invalidRollbackActions = new ArrayList<>();
         invalidRollbackActions.add(LookupActions.INTERACTION);
+        // PvP rows record fights, not world changes, so nothing restores or removes them
+        invalidRollbackActions.addAll(LookupActions.PVP_ACTIONS);
         if (!entityActionFilter.includesAnySpawn(actionList, Config.getGlobal().ROLLBACK_ENTITIES)) {
             invalidRollbackActions.add(LookupActions.ENTITY_SPAWN);
         }
@@ -442,7 +444,7 @@ public class LookupRaw extends Queue {
         try {
             Set<UUID> loadedEntityUuids = entityContext.getLoadedEntityUuids();
             Set<UUID> loadedEntityCandidates = entityContext.getLoadedEntityCandidates();
-            List<Integer> validActions = Arrays.asList(LookupActions.BLOCK_BREAK, LookupActions.BLOCK_PLACE, LookupActions.INTERACTION, LookupActions.ENTITY_KILL, LookupActions.ENTITY_SPAWN);
+            List<Integer> validActions = Arrays.asList(LookupActions.BLOCK_BREAK, LookupActions.BLOCK_PLACE, LookupActions.INTERACTION, LookupActions.ENTITY_KILL, LookupActions.ENTITY_SPAWN, LookupActions.PVP_HIT, LookupActions.PVP_KNOCKOUT, LookupActions.PVP_KILL);
             if (radius != null) {
                 restrictWorld = true;
             }
@@ -847,6 +849,11 @@ public class LookupRaw extends Queue {
             else if (inventoryQuery || actionExclude.length() > 0 || includeBlock.length() > 0 || includeEntity.length() > 0 || excludeBlock.length() > 0 || excludeEntity.length() > 0) {
                 queryBlock = queryBlock + " action NOT IN(-1) AND";
             }
+            if (!validAction && actionList.isEmpty() && (!lookup || !canLookupPvp(user))) {
+                // Rollbacks never use fights, and lookups without an action list show them only to staff
+                // who may see them. Filtering here keeps row limits and counts to the rows that remain.
+                queryBlock = queryBlock + " action NOT IN(" + LookupActions.PVP_HIT + "," + LookupActions.PVP_KNOCKOUT + "," + LookupActions.PVP_KILL + ") AND";
+            }
 
             if (includeBlock.length() > 0 || includeEntity.length() > 0) {
                 queryBlock = queryBlock + " type IN(" + (includeBlock.length() > 0 ? includeBlock : "0") + ") AND";
@@ -1054,7 +1061,7 @@ public class LookupRaw extends Queue {
                 }
 
                 if (includeBlock.length() > 0 || excludeBlock.length() > 0) {
-                    baseQuery = baseQuery.replace("action NOT IN(-1)", "action NOT IN(" + LookupActions.ENTITY_KILL + "," + LookupActions.ENTITY_SPAWN + ")"); // if block specified for include/exclude, filter out entity data
+                    baseQuery = baseQuery.replace("action NOT IN(-1)", "action NOT IN(" + LookupActions.NON_BLOCK_ACTIONS + ")"); // if block specified for include/exclude, filter out entity data
                 }
 
                 String sourceQuery = restrictSource(baseQuery, pageRows, InventorySources.BLOCK);
@@ -1394,12 +1401,17 @@ public class LookupRaw extends Queue {
         }
     }
 
+    static boolean canLookupPvp(CommandSender user) {
+        return user == null || user.hasPermission("coreprotect.lookup.pvp");
+    }
+
     private static String placedEntityTypeIds() {
         StringJoiner ids = new StringJoiner(",");
         for (Integer id : EntitySpawnTracking.getPlacedEntityTypeIds()) {
             ids.add(Integer.toString(id));
         }
-        return ids.length() == 0 ? "0" : ids.toString();
+        // Type 0 is a player victim, so an empty list must not fall back to it
+        return ids.length() == 0 ? "-1" : ids.toString();
     }
 
     private static String entitySpawnTimeQuery(long startTime, long endTime) {

@@ -36,6 +36,7 @@ import net.tfminecraft.coreprotect.listener.channel.PluginChannelHandshakeListen
 import net.tfminecraft.coreprotect.listener.channel.PluginChannelListener;
 import net.tfminecraft.coreprotect.model.action.EntityActionFilter;
 import net.tfminecraft.coreprotect.model.action.LockChange;
+import net.tfminecraft.coreprotect.model.action.PvpEvent;
 import net.tfminecraft.coreprotect.model.action.MythicIdentity;
 import net.tfminecraft.coreprotect.database.statement.EntityStatement;
 import net.tfminecraft.coreprotect.utility.AuditLabels;
@@ -557,6 +558,11 @@ public class StandardLookupThread implements Runnable {
                                 if (entityInteraction) {
                                     dname = EntityInteractionLookup.entityName(dtype);
                                 }
+                                else if (LookupActions.isPvp(daction) && amount == -1) {
+                                    // PvP rows keep the victim's user id in the data column
+                                    dname = UserStatement.getName(connection, ddata);
+                                    isPlayer = true;
+                                }
                                 else if ((daction == LookupActions.ENTITY_KILL || daction == LookupActions.ENTITY_SPAWN) && !actions.contains(LookupActions.ITEM) && amount == -1) {
                                     if (daction == LookupActions.ENTITY_KILL && dtype == 0) {
                                         dname = UserStatement.getName(connection, ddata);
@@ -590,6 +596,7 @@ public class StandardLookupThread implements Runnable {
                                 String selector = Selector.FIRST;
                                 String action = "a:block";
                                 LockChange lockChange = null;
+                                PvpEvent pvpEvent = null;
                                 if (actions.contains(LookupActions.CONTAINER) || actions.contains(5) || actions.contains(LookupActions.ITEM) || amount > -1) {
                                     byte[] metadata = data[11] == null ? null : data[11].getBytes(StandardCharsets.ISO_8859_1);
                                     dname = AuditLabels.item(metadata, dtype, amount, dname);
@@ -636,6 +643,13 @@ public class StandardLookupThread implements Runnable {
                                         tag = Color.GREEN + "+";
                                         action = placedEntitySpawn ? "a:block" : "a:spawn";
                                     }
+                                    else if (LookupActions.isPvp(daction)) {
+                                        pvpEvent = PvpEvent.fromLookupString(data[11]);
+                                        phrase = Phrase.LOOKUP_PVP; // {hit|knocked out|killed}
+                                        selector = (daction == LookupActions.PVP_HIT ? Selector.FIRST : daction == LookupActions.PVP_KNOCKOUT ? Selector.SECOND : Selector.THIRD);
+                                        tag = Color.RED + "-";
+                                        action = "a:" + LookupActions.getActionString(daction);
+                                    }
                                     else if (daction == LookupActions.INTERACTION || daction == LookupActions.ENTITY_KILL) {
                                         if (placedEntityKill) {
                                             phrase = Phrase.LOOKUP_BLOCK;
@@ -658,7 +672,11 @@ public class StandardLookupThread implements Runnable {
                                     }
 
                                     String message;
-                                    if (lockChange != null) {
+                                    if (phrase == Phrase.LOOKUP_PVP) {
+                                        String detail = pvpEvent == null ? "" : Color.WHITE + rbd + pvpEvent.describe();
+                                        message = Phrase.build(phrase, Color.DARK_AQUA + rbd + dplayer + Color.WHITE + rbd, Color.DARK_AQUA + rbd + dname + Color.WHITE + rbd, detail, selector);
+                                    }
+                                    else if (lockChange != null) {
                                         message = Phrase.build(lockChange.isStaffOverride() ? Phrase.LOOKUP_LOCK_CHANGE_STAFF : Phrase.LOOKUP_LOCK_CHANGE, Color.DARK_AQUA + rbd + dplayer + Color.WHITE + rbd, Color.DARK_AQUA + rbd + dname + Color.WHITE + rbd, Color.DARK_AQUA + rbd + lockChange.getLockState() + Color.WHITE);
                                     }
                                     else {

@@ -106,6 +106,18 @@ public class ActionParser {
                     else if (argument.equals("death") || argument.equals("deaths") || argument.equals("entity-death") || argument.equals("entity-deaths") || argument.equals("kill") || argument.equals("kills") || argument.equals("entity-kill") || argument.equals("entity-kills")) {
                         result.add(LookupActions.ENTITY_KILL);
                     }
+                    else if (argument.equals("pvp") || argument.equals("combat") || argument.equals("fight") || argument.equals("fights")) {
+                        result.addAll(LookupActions.PVP_ACTIONS);
+                    }
+                    else if (argument.equals("hit") || argument.equals("hits") || argument.equals("attack") || argument.equals("attacks") || argument.equals("damage") || argument.equals("pvp-hit") || argument.equals("pvp-hits")) {
+                        result.add(LookupActions.PVP_HIT);
+                    }
+                    else if (argument.equals("knockout") || argument.equals("knockouts") || argument.equals("ko") || argument.equals("pvp-knockout") || argument.equals("pvp-knockouts")) {
+                        result.add(LookupActions.PVP_KNOCKOUT);
+                    }
+                    else if (argument.equals("pvp-kill") || argument.equals("pvp-kills") || argument.equals("player-kill") || argument.equals("player-kills")) {
+                        result.add(LookupActions.PVP_KILL);
+                    }
                     else if (argument.equals("spawn") || argument.equals("spawns") || argument.equals("entity-spawn") || argument.equals("entity-spawns")) {
                         result.add(LookupActions.ENTITY_SPAWN);
                         entityActionFilter = EntityActionFilter.SPAWNED;

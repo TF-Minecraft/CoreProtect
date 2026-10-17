@@ -209,7 +209,7 @@ final class ClickHouseRetention {
             List<Integer> integerParameters = new ArrayList<>();
 
             if (PurgePolicy.supportsBlockRestriction(family.getTableName()) && !blockTypes.isEmpty()) {
-                sql.append(" AND action NOT IN(").append(LookupActions.ENTITY_KILL).append(',').append(LookupActions.ENTITY_SPAWN).append(") AND type IN(");
+                sql.append(" AND action NOT IN(").append(LookupActions.NON_BLOCK_ACTIONS).append(") AND type IN(");
                 StringJoiner placeholders = new StringJoiner(",");
                 for (Integer blockType : blockTypes) {
                     placeholders.add("?");

@@ -1,6 +1,9 @@
 package net.tfminecraft.coreprotect.model.action;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public final class LookupActions {
     public static final int BLOCK_BREAK = 0;
@@ -15,6 +18,13 @@ public final class LookupActions {
     public static final int SIGN = 10;
     public static final int ITEM = 11;
     public static final int ENTITY_SPAWN = 13;
+    // Player versus player rows live in the block table, but are never rolled back or matched by block filters
+    public static final int PVP_HIT = 14;
+    public static final int PVP_KNOCKOUT = 15;
+    public static final int PVP_KILL = 16;
+    public static final List<Integer> PVP_ACTIONS = Collections.unmodifiableList(Arrays.asList(PVP_HIT, PVP_KNOCKOUT, PVP_KILL));
+    // Block table actions whose type column is not a block, so block filters must skip them
+    public static final String NON_BLOCK_ACTIONS = ENTITY_KILL + "," + ENTITY_SPAWN + "," + PVP_HIT + "," + PVP_KNOCKOUT + "," + PVP_KILL;
 
     private LookupActions() {
         throw new IllegalStateException("Model class");
@@ -46,9 +56,19 @@ public final class LookupActions {
                 return "item";
             case ENTITY_SPAWN:
                 return "spawn";
+            case PVP_HIT:
+                return "hit";
+            case PVP_KNOCKOUT:
+                return "knockout";
+            case PVP_KILL:
+                return "pvp-kill";
             default:
                 return "unknown";
         }
+    }
+
+    public static boolean isPvp(int action) {
+        return PVP_ACTIONS.contains(action);
     }
 
     public static boolean isInventoryLookup(Collection<Integer> actions) {

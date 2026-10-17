@@ -499,7 +499,7 @@ public class PurgeCommand extends Consumer {
                                     else if (PurgePolicy.isPurgeable(table)) {
                                         String blockRestriction = "(";
                                         if (hasBlockRestriction && PurgePolicy.supportsBlockRestriction(table)) {
-                                            blockRestriction = "action IN(" + LookupActions.ENTITY_KILL + "," + LookupActions.ENTITY_SPAWN + ") OR type NOT IN(" + includeBlockFinal + ") OR (type IN(" + includeBlockFinal + ") AND ";
+                                            blockRestriction = "action IN(" + LookupActions.NON_BLOCK_ACTIONS + ") OR type NOT IN(" + includeBlockFinal + ") OR (type IN(" + includeBlockFinal + ") AND ";
                                         }
                                         else if (hasBlockRestriction) {
                                             purge = false;
@@ -574,7 +574,7 @@ public class PurgeCommand extends Consumer {
 
                                     String blockRestriction = "";
                                     if (hasBlockRestriction && PurgePolicy.supportsBlockRestriction(table)) {
-                                        blockRestriction = "action NOT IN(" + LookupActions.ENTITY_KILL + "," + LookupActions.ENTITY_SPAWN + ") AND type IN(" + includeBlockFinal + ") AND ";
+                                        blockRestriction = "action NOT IN(" + LookupActions.NON_BLOCK_ACTIONS + ") AND type IN(" + includeBlockFinal + ") AND ";
                                     }
                                     else if (hasBlockRestriction) {
                                         purge = false;
@@ -646,7 +646,7 @@ public class PurgeCommand extends Consumer {
 
                                 String blockRestriction = "";
                                 if (hasBlockRestriction && PurgePolicy.supportsBlockRestriction(table)) {
-                                    blockRestriction = "action NOT IN(" + LookupActions.ENTITY_KILL + "," + LookupActions.ENTITY_SPAWN + ") AND type IN(" + includeBlockFinal + ") AND ";
+                                    blockRestriction = "action NOT IN(" + LookupActions.NON_BLOCK_ACTIONS + ") AND type IN(" + includeBlockFinal + ") AND ";
                                 }
                                 else if (hasBlockRestriction) {
                                     purge = false;

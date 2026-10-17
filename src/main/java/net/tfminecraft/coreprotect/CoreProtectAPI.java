@@ -45,6 +45,8 @@ import net.tfminecraft.coreprotect.database.rollback.Rollback;
 import net.tfminecraft.coreprotect.language.Phrase;
 import net.tfminecraft.coreprotect.listener.player.InventoryChangeListener;
 import net.tfminecraft.coreprotect.model.action.LockChange;
+import net.tfminecraft.coreprotect.model.action.PvpEvent;
+import net.tfminecraft.coreprotect.listener.player.PlayerPvpListener;
 import net.tfminecraft.coreprotect.model.action.LookupActions;
 import net.tfminecraft.coreprotect.utility.Chat;
 import net.tfminecraft.coreprotect.utility.MaterialUtils;
@@ -103,7 +105,7 @@ public class CoreProtectAPI extends Queue {
     }
 
     private static boolean isSupportedLegacyAction(Integer action) {
-        return action != null && (action == LookupActions.BLOCK_BREAK || action == LookupActions.BLOCK_PLACE || action == LookupActions.INTERACTION || action == LookupActions.ENTITY_KILL || action == LookupActions.ENTITY_SPAWN);
+        return action != null && (action == LookupActions.BLOCK_BREAK || action == LookupActions.BLOCK_PLACE || action == LookupActions.INTERACTION || action == LookupActions.ENTITY_KILL || action == LookupActions.ENTITY_SPAWN || LookupActions.isPvp(action));
     }
 
     /**
@@ -529,6 +531,48 @@ public class CoreProtectAPI extends Queue {
         }
 
         return Queue.queueLockChange(user, location.getBlock().getState(), location.getBlock().getType(), new LockChange(lockState, staffOverride));
+    }
+
+    /**
+     * Logs a nonlethal knockout of one player by another. Use this when a plugin cancels the
+     * knockout blow instead of letting the victim die, since cancelled hits are not logged.
+     *
+     * @param attacker
+     *            The player who landed the knockout
+     * @param victim
+     *            The player who was knocked out
+     * @return True if the knockout was queued for logging
+     */
+    public boolean logPvpKnockout(Player attacker, Player victim) {
+        if (attacker == null || victim == null) {
+            return false;
+        }
+
+        return logPvpKnockout(attacker.getName(), victim.getName(), victim.getLocation(), PlayerPvpListener.heldItem(attacker));
+    }
+
+    /**
+     * Logs a nonlethal knockout of one player by another.
+     *
+     * @param attacker
+     *            The attacker's username
+     * @param victim
+     *            The victim's username
+     * @param location
+     *            Where the victim was knocked out
+     * @param weapon
+     *            The item that landed the knockout, for example "iron_sword", or null for an empty hand
+     * @return True if the knockout was queued for logging
+     */
+    public boolean logPvpKnockout(String attacker, String victim, Location location, String weapon) {
+        if (!isEnabled() || !isValidUserAndLocation(attacker, location) || victim == null || victim.isEmpty() || attacker.equalsIgnoreCase(victim)) {
+            return false;
+        }
+        if (!Config.getConfig(location.getWorld()).PLAYER_PVP) {
+            return false;
+        }
+
+        return Queue.queuePlayerPvp(attacker, location, victim, LookupActions.PVP_KNOCKOUT, new PvpEvent(weapon, 0, "knockout"));
     }
 
     /**
